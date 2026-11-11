@@ -5,7 +5,7 @@ import { adminSignOut } from "@/app/admin/actions";
 import { Logo } from "@/components/logo";
 
 export const metadata: Metadata = {
-  title: "Admin — Yunhong Textiles",
+  title: "Admin",
   robots: { index: false, follow: false },
   alternates: { canonical: "/admin" },
   openGraph: { title: "Admin — Yunhong Textiles", url: "/admin" },
