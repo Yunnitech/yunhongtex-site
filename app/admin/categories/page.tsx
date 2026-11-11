@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { deleteCategory } from "@/app/admin/actions";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { getStoreCategories } from "@/lib/store";
+import type { Category } from "@/lib/types";
 
 export default async function AdminCategoriesPage() {
-  const supabase = await createServerSupabaseClient();
-  const { data: rows } = supabase
-    ? await supabase.from("categories").select("*").order("sort_order").order("name")
-    : { data: [] };
+  const rows = (await getStoreCategories<Category[]>()) ?? [];
 
   return (
     <div>
@@ -31,20 +29,20 @@ export default async function AdminCategoriesPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
-            {rows?.map((row: any) => (
-              <tr key={row.id} className="hover:bg-sand/50">
+            {rows.map((row) => (
+              <tr key={row.slug} className="hover:bg-sand/50">
                 <td className="px-5 py-3.5 font-medium">{row.name}</td>
                 <td className="px-5 py-3.5 text-muted">{row.slug}</td>
                 <td className="max-w-md px-5 py-3.5 text-ink-soft">{row.tagline}</td>
                 <td className="px-5 py-3.5 whitespace-nowrap text-right">
                   <Link
-                    href={`/admin/categories/${row.id}`}
+                    href={`/admin/categories/${row.slug}`}
                     className="text-sm text-ink underline-offset-4 hover:underline"
                   >
                     Edit
                   </Link>
                   <span className="mx-2 text-line-strong">·</span>
-                  <form action={deleteCategory.bind(null, row.id)} className="inline">
+                  <form action={deleteCategory.bind(null, row.slug)} className="inline">
                     <button type="submit" className="text-sm text-clay underline-offset-4 hover:underline">
                       Delete
                     </button>
@@ -55,9 +53,9 @@ export default async function AdminCategoriesPage() {
           </tbody>
         </table>
       </div>
-      {(!rows || rows.length === 0) && (
+      {rows.length === 0 && (
         <p className="mt-6 text-sm text-muted">
-          No rows yet — run <code>node scripts/seed.mjs</code> to import the bundled catalogue.
+          No categories yet — create the first category manually.
         </p>
       )}
     </div>

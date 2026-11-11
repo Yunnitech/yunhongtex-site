@@ -1,17 +1,16 @@
 import Link from "next/link";
 import { deleteProduct } from "@/app/admin/actions";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { getCategories } from "@/lib/queries";
+import { getStoreCategories, getStoreProducts } from "@/lib/store";
+import type { Category, Product } from "@/lib/types";
 
 export default async function AdminProductsPage() {
-  const supabase = await createServerSupabaseClient();
-  const categories = await getCategories();
+  const [products, categories] = await Promise.all([
+    getStoreProducts<Product[]>(),
+    getStoreCategories<Category[]>(),
+  ]);
+  const rows = products ?? [];
   const categoryName = (slug: string) =>
-    categories.find((category) => category.slug === slug)?.name ?? slug;
-
-  const { data: rows } = supabase
-    ? await supabase.from("products").select("*").order("sort_order").order("name")
-    : { data: [] };
+    categories?.find((category) => category.slug === slug)?.name ?? slug;
 
   return (
     <div>
@@ -38,8 +37,8 @@ export default async function AdminProductsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
-            {rows?.map((row: any) => (
-              <tr key={row.id} className="hover:bg-sand/50">
+            {rows.map((row) => (
+              <tr key={row.slug} className="hover:bg-sand/50">
                 <td className="px-5 py-3.5 font-medium">
                   {row.name}
                   {row.featured && (
@@ -49,20 +48,20 @@ export default async function AdminProductsPage() {
                   )}
                 </td>
                 <td className="px-5 py-3.5 text-muted">{row.code}</td>
-                <td className="px-5 py-3.5 text-ink-soft">{categoryName(row.category_slug)}</td>
-                <td className="px-5 py-3.5 text-ink-soft">{row.weight_gsm} gsm</td>
+                <td className="px-5 py-3.5 text-ink-soft">{categoryName(row.categorySlug)}</td>
+                <td className="px-5 py-3.5 text-ink-soft">{row.weightGsm} gsm</td>
                 <td className="px-5 py-3.5 text-ink-soft">
-                  {Number(row.price_from).toFixed(2)}–{Number(row.price_to).toFixed(2)}
+                  {Number(row.priceFrom).toFixed(2)}–{Number(row.priceTo).toFixed(2)}
                 </td>
                 <td className="px-5 py-3.5 text-right whitespace-nowrap">
                   <Link
-                    href={`/admin/products/${row.id}`}
+                    href={`/admin/products/${row.slug}`}
                     className="text-sm text-ink underline-offset-4 hover:underline"
                   >
                     Edit
                   </Link>
                   <span className="mx-2 text-line-strong">·</span>
-                  <form action={deleteProduct.bind(null, row.id)} className="inline">
+                  <form action={deleteProduct.bind(null, row.slug)} className="inline">
                     <button type="submit" className="text-sm text-clay underline-offset-4 hover:underline">
                       Delete
                     </button>
@@ -73,10 +72,9 @@ export default async function AdminProductsPage() {
           </tbody>
         </table>
       </div>
-      {(!rows || rows.length === 0) && (
+      {rows.length === 0 && (
         <p className="mt-6 text-sm text-muted">
-          No rows in the database yet — run <code>node scripts/seed.mjs</code> to import the
-          bundled catalogue, or create the first product manually.
+          No products yet — create the first product manually.
         </p>
       )}
     </div>

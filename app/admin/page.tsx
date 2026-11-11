@@ -1,28 +1,21 @@
 import Link from "next/link";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/supabase/server";
+import {
+  getStoreArticles,
+  getStoreCategories,
+  getStoreFaqs,
+  getStoreProducts,
+  isRemoteStore,
+} from "@/lib/store";
+import type { Article, Category, Faq, Product } from "@/lib/types";
 
 export default async function AdminDashboard() {
-  const configured = isSupabaseConfigured();
-  const supabase = await createServerSupabaseClient();
-
-  let products = 0;
-  let categories = 0;
-  let articles = 0;
-  let faqs = 0;
-
-  if (supabase) {
-    const [p, c, a, f] = await Promise.all([
-      supabase.from("products").select("id", { count: "exact", head: true }),
-      supabase.from("categories").select("id", { count: "exact", head: true }),
-      supabase.from("articles").select("id", { count: "exact", head: true }),
-      supabase.from("faqs").select("id", { count: "exact", head: true }),
-    ]);
-    products = p.count ?? 0;
-    categories = c.count ?? 0;
-    articles = a.count ?? 0;
-    faqs = f.count ?? 0;
-  }
+  const remote = isRemoteStore();
+  const [products, categories, articles, faqs] = await Promise.all([
+    getStoreProducts<Product[]>(),
+    getStoreCategories<Category[]>(),
+    getStoreArticles<Article[]>(),
+    getStoreFaqs<Faq[]>(),
+  ]);
 
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
   const gaLink = gaId
@@ -30,10 +23,30 @@ export default async function AdminDashboard() {
     : null;
 
   const cards = [
-    { label: "Products", value: products, href: "/admin/products", note: "Stock programmes on /fabrics" },
-    { label: "Categories", value: categories, href: "/admin/categories", note: "Six fabric families" },
-    { label: "Articles", value: articles, href: "/admin/articles", note: "Sourcing guides on /insights" },
-    { label: "Buyer FAQs", value: faqs, href: "/admin/faqs", note: "Shown on the homepage and /faq" },
+    {
+      label: "Products",
+      value: products?.length ?? 0,
+      href: "/admin/products",
+      note: "Stock programmes on /fabrics",
+    },
+    {
+      label: "Categories",
+      value: categories?.length ?? 0,
+      href: "/admin/categories",
+      note: "Six fabric families",
+    },
+    {
+      label: "Articles",
+      value: articles?.length ?? 0,
+      href: "/admin/articles",
+      note: "Sourcing guides on /insights",
+    },
+    {
+      label: "Buyer FAQs",
+      value: faqs?.length ?? 0,
+      href: "/admin/faqs",
+      note: "Shown on the homepage and /faq",
+    },
   ];
 
   return (
@@ -48,15 +61,19 @@ export default async function AdminDashboard() {
         </Link>
       </div>
 
-      {!configured && (
+      {remote ? (
         <p
-          role="alert"
-          className="mt-6 rounded-lg border border-clay/40 bg-clay-soft px-4 py-3 text-sm text-clay-deep"
+          role="status"
+          className="mt-6 rounded-lg border border-forest/40 bg-forest-soft px-4 py-3 text-sm text-forest"
         >
-          Supabase is not configured yet. Fill <code>NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
-          <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in <code>.env</code>, run{" "}
-          <code>supabase/schema.sql</code> in the SQL editor, then run{" "}
-          <code>node scripts/seed.mjs</code>. Until then the site serves its built-in seed data.
+          Online saving enabled (Upstash Redis)
+        </p>
+      ) : (
+        <p
+          role="status"
+          className="mt-6 rounded-lg border border-line bg-sand px-4 py-3 text-sm text-ink-soft"
+        >
+          Local file mode — edits are written to <code>data/*.json</code> (works locally).
         </p>
       )}
 

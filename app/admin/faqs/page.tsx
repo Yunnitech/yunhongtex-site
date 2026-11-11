@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { deleteFaq } from "@/app/admin/actions";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { getStoreFaqs } from "@/lib/store";
+import type { Faq } from "@/lib/types";
 
 export default async function AdminFaqsPage() {
-  const supabase = await createServerSupabaseClient();
-  const { data: rows } = supabase
-    ? await supabase.from("faqs").select("*").order("sort_order")
-    : { data: [] };
+  const faqs = (await getStoreFaqs<Faq[]>()) ?? [];
+  const rows = faqs.map((faq, index) => ({ ...faq, id: String(index) }));
 
   return (
     <div>
@@ -30,9 +29,9 @@ export default async function AdminFaqsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
-            {rows?.map((row: any) => (
+            {rows.map((row, index) => (
               <tr key={row.id} className="hover:bg-sand/50">
-                <td className="px-5 py-3.5 text-muted">{row.sort_order}</td>
+                <td className="px-5 py-3.5 text-muted">{index}</td>
                 <td className="max-w-xl px-5 py-3.5 font-medium">{row.question}</td>
                 <td className="px-5 py-3.5 whitespace-nowrap text-right">
                   <Link
@@ -53,9 +52,9 @@ export default async function AdminFaqsPage() {
           </tbody>
         </table>
       </div>
-      {(!rows || rows.length === 0) && (
+      {rows.length === 0 && (
         <p className="mt-6 text-sm text-muted">
-          No rows yet — run <code>node scripts/seed.mjs</code> to import the bundled FAQs.
+          No FAQs yet — create the first question manually.
         </p>
       )}
     </div>

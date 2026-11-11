@@ -20,12 +20,16 @@ export type AdminFormState = { status: "idle" | "error"; message?: string };
 
 /* ---------------------------------------------------------------- helpers */
 
-function parseJson(value: FormDataEntryValue | null, fallback: unknown): unknown {
+function parseJson(
+  value: FormDataEntryValue | null,
+  fallback: unknown,
+  label: string,
+): unknown {
   if (typeof value !== "string" || !value.trim()) return fallback;
   try {
     return JSON.parse(value);
   } catch {
-    throw new Error("One of the JSON fields is invalid — check brackets and quotes.");
+    throw new Error(`${label} is not valid JSON — check brackets and quotes.`);
   }
 }
 
@@ -53,10 +57,6 @@ function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : "Save failed.";
 }
 
-function uid() {
-  return Math.random().toString(36).slice(2, 10);
-}
-
 /* ---------------------------------------------------------------- categories */
 
 export async function saveCategory(
@@ -65,8 +65,7 @@ export async function saveCategory(
 ): Promise<AdminFormState> {
   try {
     const id = text(formData.get("id"));
-    const categories: (Category & { _id?: string })[] =
-      ((await getStoreCategories<any[]>()) ?? []);
+    const categories: Category[] = (await getStoreCategories<Category[]>()) ?? [];
 
     const updated: Category = {
       slug: text(formData.get("slug")),
@@ -74,20 +73,25 @@ export async function saveCategory(
       navName: text(formData.get("navName")),
       tagline: text(formData.get("tagline")),
       summary: text(formData.get("summary")),
-      intro: parseJson(formData.get("intro"), []) as Category["intro"],
+      intro: parseJson(formData.get("intro"), [], "Intro") as Category["intro"],
       image: text(formData.get("image")),
       imageAlt: text(formData.get("imageAlt")),
-      highlights: parseJson(formData.get("highlights"), []) as Category["highlights"],
-      applications: parseJson(formData.get("applications"), []) as Category["applications"],
-      faqs: parseJson(formData.get("faqs"), []) as Category["faqs"],
+      highlights: parseJson(
+        formData.get("highlights"),
+        [],
+        "Highlights",
+      ) as Category["highlights"],
+      applications: parseJson(
+        formData.get("applications"),
+        [],
+        "Applications",
+      ) as Category["applications"],
+      faqs: parseJson(formData.get("faqs"), [], "FAQs") as Category["faqs"],
     };
 
-    if (id) {
-      const idx = categories.findIndex((c) => c._id === id);
-      if (idx >= 0) categories[idx] = { ...categories[idx], ...updated };
-    } else {
-      categories.push({ ...updated, _id: uid() });
-    }
+    const idx = id ? categories.findIndex((c) => c.slug === id) : -1;
+    if (idx >= 0) categories[idx] = { ...categories[idx], ...updated };
+    else categories.push(updated);
 
     await setStoreCategories(categories);
   } catch (error) {
@@ -98,8 +102,8 @@ export async function saveCategory(
 }
 
 export async function deleteCategory(id: string) {
-  const categories: any[] = (await getStoreCategories<any[]>()) ?? [];
-  await setStoreCategories(categories.filter((c) => c._id !== id));
+  const categories: Category[] = (await getStoreCategories<Category[]>()) ?? [];
+  await setStoreCategories(categories.filter((c) => c.slug !== id));
   revalidateContent();
   redirect("/admin/categories");
 }
@@ -112,8 +116,7 @@ export async function saveProduct(
 ): Promise<AdminFormState> {
   try {
     const id = text(formData.get("id"));
-    const products: (Product & { _id?: string })[] =
-      ((await getStoreProducts<any[]>()) ?? []);
+    const products: Product[] = (await getStoreProducts<Product[]>()) ?? [];
 
     const updated: Product = {
       slug: text(formData.get("slug")),
@@ -121,7 +124,11 @@ export async function saveProduct(
       code: text(formData.get("code")),
       categorySlug: text(formData.get("categorySlug")),
       summary: text(formData.get("summary")),
-      description: parseJson(formData.get("description"), []) as Product["description"],
+      description: parseJson(
+        formData.get("description"),
+        [],
+        "Description",
+      ) as Product["description"],
       composition: text(formData.get("composition")),
       weightGsm: number(formData.get("weightGsm")),
       widthCm: number(formData.get("widthCm")),
@@ -134,21 +141,26 @@ export async function saveProduct(
       priceFrom: number(formData.get("priceFrom")),
       priceTo: number(formData.get("priceTo")),
       colors: number(formData.get("colors")),
-      certifications: parseJson(formData.get("certifications"), []) as Product["certifications"],
-      applications: parseJson(formData.get("applications"), []) as Product["applications"],
-      features: parseJson(formData.get("features"), []) as Product["features"],
+      certifications: parseJson(
+        formData.get("certifications"),
+        [],
+        "Certifications",
+      ) as Product["certifications"],
+      applications: parseJson(
+        formData.get("applications"),
+        [],
+        "Applications",
+      ) as Product["applications"],
+      features: parseJson(formData.get("features"), [], "Features") as Product["features"],
       image: text(formData.get("image")),
       imageAlt: text(formData.get("imageAlt")),
       featured: formData.get("featured") === "on",
-      faqs: parseJson(formData.get("faqs"), []) as Product["faqs"],
+      faqs: parseJson(formData.get("faqs"), [], "FAQs") as Product["faqs"],
     };
 
-    if (id) {
-      const idx = products.findIndex((p) => p._id === id);
-      if (idx >= 0) products[idx] = { ...products[idx], ...updated };
-    } else {
-      products.push({ ...updated, _id: uid() });
-    }
+    const idx = id ? products.findIndex((p) => p.slug === id) : -1;
+    if (idx >= 0) products[idx] = { ...products[idx], ...updated };
+    else products.push(updated);
 
     await setStoreProducts(products);
   } catch (error) {
@@ -159,8 +171,8 @@ export async function saveProduct(
 }
 
 export async function deleteProduct(id: string) {
-  const products: any[] = (await getStoreProducts<any[]>()) ?? [];
-  await setStoreProducts(products.filter((p) => p._id !== id));
+  const products: Product[] = (await getStoreProducts<Product[]>()) ?? [];
+  await setStoreProducts(products.filter((p) => p.slug !== id));
   revalidateContent();
   redirect("/admin/products");
 }
@@ -173,8 +185,7 @@ export async function saveArticle(
 ): Promise<AdminFormState> {
   try {
     const id = text(formData.get("id"));
-    const articles: (Article & { _id?: string })[] =
-      ((await getStoreArticles<any[]>()) ?? []);
+    const articles: Article[] = (await getStoreArticles<Article[]>()) ?? [];
 
     const updated: Article = {
       slug: text(formData.get("slug")),
@@ -188,18 +199,23 @@ export async function saveArticle(
       topic: text(formData.get("topic")),
       image: text(formData.get("image")),
       imageAlt: text(formData.get("imageAlt")),
-      keyTakeaways: parseJson(formData.get("keyTakeaways"), []) as Article["keyTakeaways"],
-      sections: parseJson(formData.get("sections"), []) as Article["sections"],
-      faqs: parseJson(formData.get("faqs"), []) as Article["faqs"],
-      relatedCategories: parseJson(formData.get("relatedCategories"), []) as Article["relatedCategories"],
+      keyTakeaways: parseJson(
+        formData.get("keyTakeaways"),
+        [],
+        "Key takeaways",
+      ) as Article["keyTakeaways"],
+      sections: parseJson(formData.get("sections"), [], "Sections") as Article["sections"],
+      faqs: parseJson(formData.get("faqs"), [], "FAQs") as Article["faqs"],
+      relatedCategories: parseJson(
+        formData.get("relatedCategories"),
+        [],
+        "Related categories",
+      ) as Article["relatedCategories"],
     };
 
-    if (id) {
-      const idx = articles.findIndex((a) => a._id === id);
-      if (idx >= 0) articles[idx] = { ...articles[idx], ...updated };
-    } else {
-      articles.push({ ...updated, _id: uid() });
-    }
+    const idx = id ? articles.findIndex((a) => a.slug === id) : -1;
+    if (idx >= 0) articles[idx] = { ...articles[idx], ...updated };
+    else articles.push(updated);
 
     await setStoreArticles(articles);
   } catch (error) {
@@ -210,8 +226,8 @@ export async function saveArticle(
 }
 
 export async function deleteArticle(id: string) {
-  const articles: any[] = (await getStoreArticles<any[]>()) ?? [];
-  await setStoreArticles(articles.filter((a) => a._id !== id));
+  const articles: Article[] = (await getStoreArticles<Article[]>()) ?? [];
+  await setStoreArticles(articles.filter((a) => a.slug !== id));
   revalidateContent();
   redirect("/admin/articles");
 }
@@ -224,19 +240,18 @@ export async function saveFaq(
 ): Promise<AdminFormState> {
   try {
     const id = text(formData.get("id"));
-    const faqs: (Faq & { _id?: string; sortOrder?: number })[] =
-      ((await getStoreFaqs<any[]>()) ?? []);
+    const faqs: Faq[] = (await getStoreFaqs<Faq[]>()) ?? [];
 
     const updated: Faq = {
       question: text(formData.get("question")),
       answer: text(formData.get("answer")),
     };
 
-    if (id) {
-      const idx = faqs.findIndex((f) => f._id === id);
-      if (idx >= 0) faqs[idx] = { ...faqs[idx], ...updated };
+    const idx = id ? Number(id) : -1;
+    if (Number.isInteger(idx) && idx >= 0 && idx < faqs.length) {
+      faqs[idx] = { ...faqs[idx], ...updated };
     } else {
-      faqs.push({ ...updated, _id: uid(), sortOrder: faqs.length });
+      faqs.push(updated);
     }
 
     await setStoreFaqs(faqs);
@@ -250,8 +265,10 @@ export async function saveFaq(
 }
 
 export async function deleteFaq(id: string) {
-  const faqs: any[] = (await getStoreFaqs<any[]>()) ?? [];
-  await setStoreFaqs(faqs.filter((f) => f._id !== id));
+  const faqs: Faq[] = (await getStoreFaqs<Faq[]>()) ?? [];
+  const idx = Number(id);
+  if (Number.isInteger(idx) && idx >= 0 && idx < faqs.length) faqs.splice(idx, 1);
+  await setStoreFaqs(faqs);
   revalidatePath("/");
   revalidatePath("/faq");
   redirect("/admin/faqs");
@@ -291,12 +308,17 @@ export async function saveSiteSettings(
         instagram: text(formData.get("instagram")),
         youtube: text(formData.get("youtube")),
       },
-      markets: parseJson(formData.get("markets"), defaultSite.markets) as Site["markets"],
+      markets: parseJson(
+        formData.get("markets"),
+        defaultSite.markets,
+        "Markets",
+      ) as Site["markets"],
       certifications: parseJson(
         formData.get("certifications"),
         defaultSite.certifications,
+        "Certifications",
       ) as Site["certifications"],
-      stats: parseJson(formData.get("stats"), defaultSite.stats) as Site["stats"],
+      stats: parseJson(formData.get("stats"), defaultSite.stats, "Stats") as Site["stats"],
     };
 
     await setStoreSite(site);

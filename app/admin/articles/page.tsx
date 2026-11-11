@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { deleteArticle } from "@/app/admin/actions";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { getStoreArticles } from "@/lib/store";
+import type { Article } from "@/lib/types";
 
 export default async function AdminArticlesPage() {
-  const supabase = await createServerSupabaseClient();
-  const { data: rows } = supabase
-    ? await supabase.from("articles").select("*").order("date", { ascending: false })
-    : { data: [] };
+  const rows = ((await getStoreArticles<Article[]>()) ?? []).sort((a, b) =>
+    String(b.date ?? "").localeCompare(String(a.date ?? "")),
+  );
 
   return (
     <div>
@@ -31,20 +31,20 @@ export default async function AdminArticlesPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
-            {rows?.map((row: any) => (
-              <tr key={row.id} className="hover:bg-sand/50">
+            {rows.map((row) => (
+              <tr key={row.slug} className="hover:bg-sand/50">
                 <td className="px-5 py-3.5 font-medium">{row.title}</td>
                 <td className="px-5 py-3.5 text-ink-soft">{row.topic}</td>
                 <td className="px-5 py-3.5 text-muted">{row.date}</td>
                 <td className="px-5 py-3.5 whitespace-nowrap text-right">
                   <Link
-                    href={`/admin/articles/${row.id}`}
+                    href={`/admin/articles/${row.slug}`}
                     className="text-sm text-ink underline-offset-4 hover:underline"
                   >
                     Edit
                   </Link>
                   <span className="mx-2 text-line-strong">·</span>
-                  <form action={deleteArticle.bind(null, row.id)} className="inline">
+                  <form action={deleteArticle.bind(null, row.slug)} className="inline">
                     <button type="submit" className="text-sm text-clay underline-offset-4 hover:underline">
                       Delete
                     </button>
@@ -55,9 +55,9 @@ export default async function AdminArticlesPage() {
           </tbody>
         </table>
       </div>
-      {(!rows || rows.length === 0) && (
+      {rows.length === 0 && (
         <p className="mt-6 text-sm text-muted">
-          No rows yet — run <code>node scripts/seed.mjs</code> to import the bundled guides.
+          No articles yet — create the first guide manually.
         </p>
       )}
     </div>
