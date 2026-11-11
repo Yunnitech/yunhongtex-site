@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { adminSignOut } from "@/app/admin/actions";
 import { Logo } from "@/components/logo";
 
@@ -16,7 +17,14 @@ const sections = [
   { href: "/admin/settings", label: "Company settings" },
 ];
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const expected = process.env.ADMIN_PASSWORD || "admin12345";
+  const authenticated = cookieStore.get("admin_auth")?.value === expected;
+
+  // Login page — no sidebar chrome.
+  if (!authenticated) return <>{children}</>;
+
   return (
     <div className="flex min-h-screen bg-paper">
       <aside className="flex w-60 shrink-0 flex-col border-r border-line bg-surface">

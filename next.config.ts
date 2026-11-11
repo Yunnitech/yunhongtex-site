@@ -3,6 +3,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // The JSON content store is read at runtime with fs — make sure it is
+  // bundled into the serverless functions on Vercel.
+  outputFileTracingIncludes: {
+    "/**/*": ["./data/**/*"],
+  },
   images: {
     // Fabric photography is served from the asset generation host.
     remotePatterns: [
