@@ -1,13 +1,13 @@
-import { absoluteUrl, site } from "@/lib/site";
-import type { Category, Faq, Product } from "@/lib/products";
-import type { Article } from "@/lib/articles";
+import { absoluteUrl } from "@/lib/site";
+import type { Article, Category, Faq, Product, Site } from "@/lib/types";
 
 type Json = Record<string, unknown>;
 
-const orgId = `${site.url}/#organization`;
-const siteId = `${site.url}/#website`;
+const orgIdOf = (site: Site) => `${site.url}/#organization`;
+const siteIdOf = (site: Site) => `${site.url}/#website`;
 
-export function organizationSchema(): Json {
+export function organizationSchema(site: Site): Json {
+  const orgId = orgIdOf(site);
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -75,16 +75,16 @@ export function organizationSchema(): Json {
   };
 }
 
-export function websiteSchema(): Json {
+export function websiteSchema(site: Site): Json {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": siteId,
+    "@id": siteIdOf(site),
     url: site.url,
     name: site.name,
     description: site.description,
     inLanguage: "en",
-    publisher: { "@id": orgId },
+    publisher: { "@id": orgIdOf(site) },
   };
 }
 
@@ -116,7 +116,8 @@ export function faqSchema(faqs: Faq[]): Json {
   };
 }
 
-export function productSchema(product: Product, category?: Category): Json {
+export function productSchema(product: Product, site: Site, category?: Category): Json {
+  const orgId = orgIdOf(site);
   return {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -210,7 +211,7 @@ export function itemListSchema(
   };
 }
 
-export function articleSchema(article: Article): Json {
+export function articleSchema(article: Article, site: Site): Json {
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -234,26 +235,24 @@ export function articleSchema(article: Article): Json {
       name: article.author,
       url: absoluteUrl("/about"),
     },
-    publisher: { "@id": orgId },
+    publisher: { "@id": orgIdOf(site) },
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": absoluteUrl(`/insights/${article.slug}`),
     },
-    isPartOf: { "@id": siteId },
+    isPartOf: { "@id": siteIdOf(site) },
   };
 }
 
-export function webPageSchema({
-  title,
-  description,
-  path,
-  type = "WebPage",
-}: {
-  title: string;
-  description: string;
-  path: string;
-  type?: "WebPage" | "CollectionPage" | "AboutPage" | "ContactPage";
-}): Json {
+export function webPageSchema(
+  { title, description, path, type = "WebPage" }: {
+    title: string;
+    description: string;
+    path: string;
+    type?: "WebPage" | "CollectionPage" | "AboutPage" | "ContactPage";
+  },
+  site: Site,
+): Json {
   return {
     "@context": "https://schema.org",
     "@type": type,
@@ -261,8 +260,8 @@ export function webPageSchema({
     url: absoluteUrl(path),
     name: title,
     description,
-    isPartOf: { "@id": siteId },
-    about: { "@id": orgId },
+    isPartOf: { "@id": siteIdOf(site) },
+    about: { "@id": orgIdOf(site) },
     inLanguage: "en",
   };
 }

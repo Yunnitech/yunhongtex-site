@@ -1,13 +1,17 @@
+import type { NavItem, Site } from "@/lib/types";
+
 /**
- * Single source of truth for brand, contact and export-market facts.
- * Everything that appears in metadata, JSON-LD and llms.txt reads from here,
- * so structured data can never drift from the visible page copy.
+ * Static fallback for brand/contact facts. At runtime the admin CMS can
+ * override these via `getSite()` (site_settings table); without a configured
+ * Supabase project the site keeps working from these defaults.
  */
-export const site = {
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.yunhongtex.com";
+
+export const defaultSite: Site = {
   name: "Yunhong Textiles",
   legalName: "Zhejiang Yunhong Textile Co., Ltd.",
   shortName: "Yunhong",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.yunhongtex.com",
+  url: siteUrl,
   locale: "en",
   language: "en",
   tagline: "Fabric programmes for brands that ship worldwide",
@@ -16,10 +20,10 @@ export const site = {
   foundedYear: 2009,
   email: "sales@yunhongtex.com",
   sampleEmail: "samples@yunhongtex.com",
-  phone: "+86 575 8411 0000",            // TODO: 替换为真实号码
-  whatsapp: "+86 138 0000 0000",        // TODO: 替换为真实 WhatsApp
+  phone: "+86 575 8411 0000", // TODO: replace with real number
+  whatsapp: "+86 138 0000 0000", // TODO: replace with real WhatsApp
   address: {
-    street: "",                          // TODO: 街道地址
+    street: "", // TODO: street address
     city: "Shaoxing",
     region: "Zhejiang",
     postalCode: "312000",
@@ -29,11 +33,10 @@ export const site = {
   hours: "Mon–Fri, 09:00–18:00 (GMT+8)",
   responseTime: "Replies within one business day",
   social: {
-    linkedin: "",                         // TODO: LinkedIn 链接
-    instagram: "",                        // TODO: Instagram 链接
-    youtube: "",                          // TODO: YouTube 链接
+    linkedin: "", // TODO: LinkedIn URL
+    instagram: "", // TODO: Instagram URL
+    youtube: "", // TODO: YouTube URL
   },
-  /** Commercial defaults quoted across the site. */
   terms: {
     moq: "300 m per colour",
     stockMoq: "100 m from stock",
@@ -86,20 +89,23 @@ export const site = {
     { value: "300 m", label: "Minimum order per colour" },
     { value: "4.2M m", label: "Shipped in 2025" },
   ],
-} as const;
+};
 
-export const nav = [
+export const nav: NavItem[] = [
   { href: "/fabrics", label: "Fabrics" },
   { href: "/services", label: "Services" },
   { href: "/quality", label: "Quality & Compliance" },
   { href: "/insights", label: "Insights" },
   { href: "/about", label: "About" },
-] as const;
+];
 
 export function absoluteUrl(path = "/") {
-  return new URL(path, site.url).toString();
+  return new URL(path, siteUrl).toString();
 }
 
-export function whatsappLink(message = "Hello Yunhong, I would like to discuss a fabric order.") {
-  return `https://wa.me/${site.whatsapp.replace(/[^\d]/g, "")}?text=${encodeURIComponent(message)}`;
+export function whatsappLink(
+  whatsapp: string,
+  message = "Hello Yunhong, I would like to discuss a fabric order.",
+) {
+  return `https://wa.me/${whatsapp.replace(/[^\d]/g, "")}?text=${encodeURIComponent(message)}`;
 }

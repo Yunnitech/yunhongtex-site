@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { absoluteUrl, site } from "@/lib/site";
+import { absoluteUrl, defaultSite } from "@/lib/site";
 import { fabricPhoto } from "@/lib/utils";
 
 /** Fallback social image for pages without their own photography. */
@@ -65,7 +65,7 @@ export function buildMetadata({
     openGraph: {
       type,
       url,
-      siteName: site.name,
+      siteName: defaultSite.name,
       title,
       description,
       locale: "en_US",

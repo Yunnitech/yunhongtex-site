@@ -1,31 +1,5 @@
 import { fabricPhoto } from "@/lib/utils";
-import type { Faq } from "@/lib/products";
-
-export type ArticleSection = {
-  heading: string;
-  paragraphs: string[];
-  bullets?: string[];
-  table?: { caption: string; head: string[]; rows: string[][] };
-};
-
-export type Article = {
-  slug: string;
-  title: string;
-  /** Meta description, 150–160 characters. */
-  description: string;
-  excerpt: string;
-  date: string;
-  updated?: string;
-  author: string;
-  readingMinutes: number;
-  topic: string;
-  image: string;
-  imageAlt: string;
-  keyTakeaways: string[];
-  sections: ArticleSection[];
-  faqs: Faq[];
-  relatedCategories: string[];
-};
+import type { Article } from "@/lib/types";
 
 export const articles: Article[] = [
   {
@@ -411,13 +385,3 @@ export const articles: Article[] = [
     relatedCategories: ["linen", "viscose", "cotton"],
   },
 ];
-
-export function getArticle(slug: string) {
-  return articles.find((article) => article.slug === slug);
-}
-
-export function recentArticles(limit = 3) {
-  return [...articles]
-    .sort((a, b) => (a.date < b.date ? 1 : -1))
-    .slice(0, limit);
-}

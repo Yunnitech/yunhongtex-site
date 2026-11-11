@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/lib/site";
+import { defaultSite } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -16,7 +16,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "PerplexityBot", allow: "/" },
       { userAgent: "Google-Extended", allow: "/" },
     ],
-    sitemap: `${site.url}/sitemap.xml`,
-    host: new URL(site.url).host,
+    sitemap: `${defaultSite.url}/sitemap.xml`,
+    host: new URL(defaultSite.url).host,
   };
 }

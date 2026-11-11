@@ -1,13 +1,16 @@
-import { articles } from "@/lib/articles";
-import { categories, products } from "@/lib/products";
-import { site } from "@/lib/site";
+import { getArticles, getCategories, getProducts, getSite } from "@/lib/queries";
 
 /**
  * llms.txt: a compact, machine-readable summary of the site for answer engines.
  * Follows the llms.txt convention — markdown, one H1, a blockquote summary,
  * then curated link sections with short descriptions.
  */
-export function GET() {
+export async function GET() {
+  const site = await getSite();
+  const categories = await getCategories();
+  const products = await getProducts();
+  const articles = await getArticles();
+
   const body = `# ${site.name}
 
 > ${site.description}

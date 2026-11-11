@@ -1,5 +1,4 @@
-import type { Faq } from "@/lib/products";
-import { site } from "@/lib/site";
+import type { Faq } from "@/lib/types";
 
 /**
  * Buyer-intent questions repeated across the site and in FAQPage JSON-LD.

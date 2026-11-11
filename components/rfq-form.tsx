@@ -2,12 +2,19 @@
 
 import { useActionState } from "react";
 import { submitRfq, type RfqState } from "@/app/actions";
-import { categories } from "@/lib/products";
-import { site } from "@/lib/site";
+import type { Category, Site } from "@/lib/types";
 
 const initialState: RfqState = { status: "idle" };
 
-export function RfqForm({ defaultProduct }: { defaultProduct?: string }) {
+export function RfqForm({
+  defaultProduct,
+  categories,
+  site,
+}: {
+  defaultProduct?: string;
+  categories: Category[];
+  site: Site;
+}) {
   const [state, formAction, pending] = useActionState(submitRfq, initialState);
 
   if (state.status === "success") {

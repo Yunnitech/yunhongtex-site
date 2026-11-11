@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { site } from "@/lib/site";
+import { getSite } from "@/lib/queries";
 
-export function CtaBand({
+export async function CtaBand({
   eyebrow = "Next step",
   title = "Send us your fabric spec and we will quote within one business day",
   body = "Share the composition, weight, width, colour reference and quantity. We will reply with a price, a lab dip timetable and a sampling plan — no account setup needed.",
@@ -10,6 +10,7 @@ export function CtaBand({
   title?: string;
   body?: string;
 }) {
+  const site = await getSite();
   return (
     <section className="bg-forest text-paper">
       <div className="weave-texture">

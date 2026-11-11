@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { MobileNav } from "@/components/mobile-nav";
-import { nav, site, whatsappLink } from "@/lib/site";
+import { getSite } from "@/lib/queries";
+import { nav, whatsappLink } from "@/lib/site";
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const site = await getSite();
+
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-paper/95 backdrop-blur-md">
       <div className="hidden border-b border-line/60 md:block">
@@ -38,7 +41,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-3">
           <a
-            href={whatsappLink()}
+            href={whatsappLink(site.whatsapp)}
             className="hidden text-[0.8125rem] text-ink-soft transition-colors hover:text-clay xl:inline"
           >
             WhatsApp {site.whatsapp}
@@ -46,7 +49,7 @@ export function SiteHeader() {
           <Link href="/contact" className="btn btn-primary hidden sm:inline-flex">
             Request a quote
           </Link>
-          <MobileNav />
+          <MobileNav email={site.email} />
         </div>
       </div>
     </header>

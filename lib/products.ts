@@ -1,49 +1,5 @@
 import { fabricPhoto } from "@/lib/utils";
-
-export type Faq = { question: string; answer: string };
-
-export type Category = {
-  slug: string;
-  name: string;
-  navName: string;
-  tagline: string;
-  /** One-sentence answer kept under 40 words — the block AI answer engines quote. */
-  summary: string;
-  intro: string[];
-  image: string;
-  imageAlt: string;
-  highlights: string[];
-  applications: string[];
-  faqs: Faq[];
-};
-
-export type Product = {
-  slug: string;
-  name: string;
-  code: string;
-  categorySlug: string;
-  summary: string;
-  description: string[];
-  composition: string;
-  weightGsm: number;
-  widthCm: number;
-  weave: string;
-  finish: string;
-  shrinkage: string;
-  moqMeters: number;
-  stockMeters: number;
-  leadTimeDays: [number, number];
-  priceFrom: number;
-  priceTo: number;
-  colors: number;
-  certifications: string[];
-  applications: string[];
-  features: string[];
-  image: string;
-  imageAlt: string;
-  featured?: boolean;
-  faqs: Faq[];
-};
+import type { Category, Product } from "@/lib/types";
 
 const photo = (prompt: string, size: "portrait_4_3" | "landscape_4_3" = "portrait_4_3") =>
   fabricPhoto(prompt, size);
@@ -1150,31 +1106,6 @@ export const products: Product[] = [
 ];
 
 /* ------------------------------------------------------------------ helpers */
-
-export function getCategory(slug: string) {
-  return categories.find((category) => category.slug === slug);
-}
-
-export function getProduct(slug: string) {
-  return products.find((product) => product.slug === slug);
-}
-
-export function productsByCategory(slug: string) {
-  return products.filter((product) => product.categorySlug === slug);
-}
-
-export function featuredProducts() {
-  return products.filter((product) => product.featured);
-}
-
-export function relatedProducts(slug: string, limit = 3) {
-  const product = getProduct(slug);
-  if (!product) return [];
-  return products
-    .filter((item) => item.categorySlug === product.categorySlug && item.slug !== slug)
-    .concat(products.filter((item) => item.categorySlug !== product.categorySlug))
-    .slice(0, limit);
-}
 
 export function productPriceRange(product: Product) {
   return `US$${product.priceFrom.toFixed(2)}–${product.priceTo.toFixed(2)} / m`;

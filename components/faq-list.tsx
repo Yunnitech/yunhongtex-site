@@ -1,4 +1,4 @@
-import type { Faq } from "@/lib/products";
+import type { Faq } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export function FaqList({

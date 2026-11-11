@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { categories } from "@/lib/products";
-import { site, whatsappLink } from "@/lib/site";
+import { getCategories, getSite } from "@/lib/queries";
+import { whatsappLink } from "@/lib/site";
 
 const companyLinks = [
   { href: "/about", label: "About Yunhong" },
@@ -12,7 +12,10 @@ const companyLinks = [
   { href: "/contact", label: "Contact & RFQ" },
 ];
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const site = await getSite();
+  const categories = await getCategories();
+
   return (
     <footer className="mt-24 bg-ink text-paper">
       <div className="weave-texture">
@@ -90,7 +93,7 @@ export function SiteFooter() {
                 </p>
                 <p>
                   <a
-                    href={whatsappLink()}
+                    href={whatsappLink(site.whatsapp)}
                     className="hover:text-paper"
                     target="_blank"
                     rel="noopener noreferrer"

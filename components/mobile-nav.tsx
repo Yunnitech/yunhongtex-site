@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { nav } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-export function MobileNav() {
+export function MobileNav({ email }: { email: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -76,8 +76,8 @@ export function MobileNav() {
               </li>
             </ul>
           </nav>
-          <a href="mailto:sales@yunhongtex.com" className="mt-8 block text-sm text-muted">
-            sales@yunhongtex.com
+          <a href={`mailto:${email}`} className="mt-8 block text-sm text-muted">
+            {email}
           </a>
         </div>
       )}
