@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/_next/"],
+        disallow: ["/admin/", "/api/", "/_next/"],
       },
       // AI answer engines are explicitly welcome: the site is written to be cited.
       { userAgent: "GPTBot", allow: "/" },
