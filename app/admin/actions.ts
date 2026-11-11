@@ -3,11 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
-  getStoreCategory,
+  getStoreCategories,
   getStoreProducts,
   getStoreArticles,
   getStoreFaqs,
-  getStoreSite,
   setStoreCategories,
   setStoreProducts,
   setStoreArticles,
@@ -67,7 +66,7 @@ export async function saveCategory(
   try {
     const id = text(formData.get("id"));
     const categories: (Category & { _id?: string })[] =
-      (getStoreCategory<any[]>() ?? []);
+      ((await getStoreCategories<any[]>()) ?? []);
 
     const updated: Category = {
       slug: text(formData.get("slug")),
@@ -90,7 +89,7 @@ export async function saveCategory(
       categories.push({ ...updated, _id: uid() });
     }
 
-    setStoreCategories(categories);
+    await setStoreCategories(categories);
   } catch (error) {
     return { status: "error", message: messageOf(error) };
   }
@@ -99,8 +98,8 @@ export async function saveCategory(
 }
 
 export async function deleteCategory(id: string) {
-  const categories: any[] = getStoreCategory<any[]>() ?? [];
-  setStoreCategories(categories.filter((c) => c._id !== id));
+  const categories: any[] = (await getStoreCategories<any[]>()) ?? [];
+  await setStoreCategories(categories.filter((c) => c._id !== id));
   revalidateContent();
   redirect("/admin/categories");
 }
@@ -114,7 +113,7 @@ export async function saveProduct(
   try {
     const id = text(formData.get("id"));
     const products: (Product & { _id?: string })[] =
-      (getStoreProducts<any[]>() ?? []);
+      ((await getStoreProducts<any[]>()) ?? []);
 
     const updated: Product = {
       slug: text(formData.get("slug")),
@@ -151,7 +150,7 @@ export async function saveProduct(
       products.push({ ...updated, _id: uid() });
     }
 
-    setStoreProducts(products);
+    await setStoreProducts(products);
   } catch (error) {
     return { status: "error", message: messageOf(error) };
   }
@@ -160,8 +159,8 @@ export async function saveProduct(
 }
 
 export async function deleteProduct(id: string) {
-  const products: any[] = getStoreProducts<any[]>() ?? [];
-  setStoreProducts(products.filter((p) => p._id !== id));
+  const products: any[] = (await getStoreProducts<any[]>()) ?? [];
+  await setStoreProducts(products.filter((p) => p._id !== id));
   revalidateContent();
   redirect("/admin/products");
 }
@@ -175,7 +174,7 @@ export async function saveArticle(
   try {
     const id = text(formData.get("id"));
     const articles: (Article & { _id?: string })[] =
-      (getStoreArticles<any[]>() ?? []);
+      ((await getStoreArticles<any[]>()) ?? []);
 
     const updated: Article = {
       slug: text(formData.get("slug")),
@@ -202,7 +201,7 @@ export async function saveArticle(
       articles.push({ ...updated, _id: uid() });
     }
 
-    setStoreArticles(articles);
+    await setStoreArticles(articles);
   } catch (error) {
     return { status: "error", message: messageOf(error) };
   }
@@ -211,8 +210,8 @@ export async function saveArticle(
 }
 
 export async function deleteArticle(id: string) {
-  const articles: any[] = getStoreArticles<any[]>() ?? [];
-  setStoreArticles(articles.filter((a) => a._id !== id));
+  const articles: any[] = (await getStoreArticles<any[]>()) ?? [];
+  await setStoreArticles(articles.filter((a) => a._id !== id));
   revalidateContent();
   redirect("/admin/articles");
 }
@@ -226,7 +225,7 @@ export async function saveFaq(
   try {
     const id = text(formData.get("id"));
     const faqs: (Faq & { _id?: string; sortOrder?: number })[] =
-      (getStoreFaqs<any[]>() ?? []);
+      ((await getStoreFaqs<any[]>()) ?? []);
 
     const updated: Faq = {
       question: text(formData.get("question")),
@@ -240,7 +239,7 @@ export async function saveFaq(
       faqs.push({ ...updated, _id: uid(), sortOrder: faqs.length });
     }
 
-    setStoreFaqs(faqs);
+    await setStoreFaqs(faqs);
   } catch (error) {
     return { status: "error", message: messageOf(error) };
   }
@@ -251,8 +250,8 @@ export async function saveFaq(
 }
 
 export async function deleteFaq(id: string) {
-  const faqs: any[] = getStoreFaqs<any[]>() ?? [];
-  setStoreFaqs(faqs.filter((f) => f._id !== id));
+  const faqs: any[] = (await getStoreFaqs<any[]>()) ?? [];
+  await setStoreFaqs(faqs.filter((f) => f._id !== id));
   revalidatePath("/");
   revalidatePath("/faq");
   redirect("/admin/faqs");
@@ -300,7 +299,7 @@ export async function saveSiteSettings(
       stats: parseJson(formData.get("stats"), defaultSite.stats) as Site["stats"],
     };
 
-    setStoreSite(site);
+    await setStoreSite(site);
   } catch (error) {
     return { status: "error", message: messageOf(error) };
   }

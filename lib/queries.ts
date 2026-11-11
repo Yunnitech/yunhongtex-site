@@ -4,7 +4,7 @@ import { articles as seedArticles } from "@/lib/articles";
 import { faqs as seedFaqs } from "@/lib/faqs";
 import { defaultSite } from "@/lib/site";
 import {
-  getStoreCategory,
+  getStoreCategories,
   getStoreProducts,
   getStoreArticles,
   getStoreFaqs,
@@ -93,7 +93,7 @@ function mapFaq(r: any): Faq {
    3. bundled static seeds                                                    */
 
 async function loadCategories(): Promise<Category[]> {
-  const file = getStoreCategory<any[]>();
+  const file = await getStoreCategories<any[]>();
   if (file) return file.map(mapCategory);
   const supabase = createAnonSupabaseClient();
   if (supabase) {
@@ -104,7 +104,7 @@ async function loadCategories(): Promise<Category[]> {
 }
 
 async function loadProducts(): Promise<Product[]> {
-  const file = getStoreProducts<any[]>();
+  const file = await getStoreProducts<any[]>();
   if (file) return file.map(mapProduct);
   const supabase = createAnonSupabaseClient();
   if (supabase) {
@@ -115,7 +115,7 @@ async function loadProducts(): Promise<Product[]> {
 }
 
 async function loadArticles(): Promise<Article[]> {
-  const file = getStoreArticles<any[]>();
+  const file = await getStoreArticles<any[]>();
   if (file) return file.map(mapArticle);
   const supabase = createAnonSupabaseClient();
   if (supabase) {
@@ -126,7 +126,7 @@ async function loadArticles(): Promise<Article[]> {
 }
 
 async function loadFaqs(): Promise<Faq[]> {
-  const file = getStoreFaqs<any[]>();
+  const file = await getStoreFaqs<any[]>();
   if (file) return file.map(mapFaq);
   const supabase = createAnonSupabaseClient();
   if (supabase) {
@@ -136,8 +136,8 @@ async function loadFaqs(): Promise<Faq[]> {
   return seedFaqs;
 }
 
-function loadSite(): Site {
-  const file = getStoreSite<Site>();
+async function loadSite(): Promise<Site> {
+  const file = await getStoreSite<Site>();
   if (file) return { ...defaultSite, ...file, address: { ...defaultSite.address, ...(file.address ?? {}) }, social: { ...defaultSite.social, ...(file.social ?? {}) }, terms: { ...defaultSite.terms, ...(file.terms ?? {}) } };
   return defaultSite;
 }
