@@ -312,7 +312,7 @@ export async function saveSiteSettings(
 
 export async function adminLogin(_prev: { ok: boolean; message?: string }, formData: FormData) {
   const password = text(formData.get("password"));
-  const expected = process.env.ADMIN_PASSWORD ?? "admin12345";
+  const expected = process.env.ADMIN_PASSWORD || "admin12345";
 
   if (password !== expected) {
     return { ok: false as const, message: "Incorrect password" };

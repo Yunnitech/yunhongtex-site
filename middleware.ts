@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
   if (!isAdminArea && !isAdminApi) return NextResponse.next();
 
   const adminPassword =
-    process.env.ADMIN_PASSWORD ?? "admin12345"; // fallback if not configured
+    process.env.ADMIN_PASSWORD || "admin12345"; // fallback if not configured
 
   const cookie = request.cookies.get(ADMIN_COOKIE)?.value;
   const authenticated = cookie === adminPassword;
