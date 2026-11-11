@@ -1,31 +1,39 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { adminLogin } from "../actions";
 
-export default function AdminLoginPage() {
+const COOKIE_NAME = "admin_auth";
+
+function LoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const search = useSearchParams();
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    search.get("logout") === "1" ? "Signed out." : null,
+  );
   const [pending, setPending] = useState(false);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setPending(true);
     setError(null);
-    const supabase = createBrowserSupabaseClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (signInError) {
-      setError(signInError.message);
+
+    const form = new FormData();
+    form.set("password", password);
+
+    const result = await adminLogin({ ok: true }, form);
+    if (!result.ok) {
+      setError(result.message ?? "Login failed");
       setPending(false);
       return;
     }
-    router.push("/admin");
+
+    // Set auth cookie client-side — matches middleware check
+    document.cookie = `${COOKIE_NAME}=${encodeURIComponent(password)}; path=/; max-age=604800; SameSite=Lax`;
+    const from = search.get("from") ?? "/admin";
+    router.push(from);
     router.refresh();
   }
 
@@ -33,34 +41,25 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-paper px-4">
       <div className="w-full max-w-md">
         <p className="eyebrow">Yunhong admin</p>
-        <h1 className="mt-4 font-display text-[2rem] leading-tight">Sign in to the console</h1>
+        <h1 className="mt-4 font-display text-[2rem] leading-tight">Admin console</h1>
+        <p className="mt-3 text-sm text-muted">
+          Enter the admin password to edit products, articles and site settings.
+        </p>
         <form onSubmit={handleSubmit} className="card mt-8 space-y-5 p-6 sm:p-8">
-          <div>
-            <label className="field-label" htmlFor="email">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              className="field"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-          </div>
           <div>
             <label className="field-label" htmlFor="password">
               Password
             </label>
             <input
               id="password"
+              name="password"
               type="password"
               className="field"
               autoComplete="current-password"
               required
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Admin password"
             />
           </div>
           {error && (
@@ -73,11 +72,21 @@ export default function AdminLoginPage() {
           </button>
         </form>
         <p className="mt-6 text-center text-[0.75rem] text-muted">
-          <a href="/" className="link-underline">
-            ← Back to the website
-          </a>
+          Default password: <code>admin12345</code> — change it via{" "}
+          <code>ADMIN_PASSWORD</code> in <code>.env</code>
+        </p>
+        <p className="mt-2 text-center text-[0.75rem]">
+          <a href="/" className="link-underline text-muted">← Back to the website</a>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading…</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

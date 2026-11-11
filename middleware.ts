@@ -1,53 +1,42 @@
-import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+// Simple cookie-based admin auth. No database required.
+// Set ADMIN_PASSWORD in your env (or .env) to enable it.
+
+const ADMIN_COOKIE = "admin_auth";
+
 export async function middleware(request: NextRequest) {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  let response = NextResponse.next({ request });
-
-  // Not configured yet — let the admin routes render their own "not set up" state.
-  if (!url || !anonKey) return response;
-
-  const supabase = createServerClient(url, anonKey, {
-    cookies: {
-      getAll() {
-        return request.cookies.getAll();
-      },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
-        cookiesToSet.forEach(({ name, value, options }) =>
-          response.cookies.set(name, value, options),
-        );
-      },
-    },
-  });
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const path = request.nextUrl.pathname;
   const isAdminArea = path.startsWith("/admin");
   const isLoginPage = path === "/admin/login";
+  const isAdminApi = path.startsWith("/api/admin");
 
-  if (isAdminArea && !isLoginPage && !user) {
+  if (!isAdminArea && !isAdminApi) return NextResponse.next();
+
+  const adminPassword =
+    process.env.ADMIN_PASSWORD ?? "admin12345"; // fallback if not configured
+
+  const cookie = request.cookies.get(ADMIN_COOKIE)?.value;
+  const authenticated = cookie === adminPassword;
+
+  // Login page — redirect to dashboard if already logged in
+  if (isLoginPage && authenticated) {
+    const next = request.nextUrl.clone();
+    next.pathname = "/admin";
+    return NextResponse.redirect(next);
+  }
+
+  // Admin area — redirect to login if not authenticated
+  if (isAdminArea && !isLoginPage && !authenticated) {
     const login = request.nextUrl.clone();
     login.pathname = "/admin/login";
+    login.searchParams.set("from", path);
     return NextResponse.redirect(login);
   }
 
-  if (isLoginPage && user) {
-    const home = request.nextUrl.clone();
-    home.pathname = "/admin";
-    return NextResponse.redirect(home);
-  }
-
-  return response;
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
 };

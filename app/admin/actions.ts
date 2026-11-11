@@ -2,9 +2,20 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import {
+  getStoreCategory,
+  getStoreProducts,
+  getStoreArticles,
+  getStoreFaqs,
+  getStoreSite,
+  setStoreCategories,
+  setStoreProducts,
+  setStoreArticles,
+  setStoreFaqs,
+  setStoreSite,
+} from "@/lib/store";
 import { defaultSite } from "@/lib/site";
-import type { Site } from "@/lib/types";
+import type { Article, Category, Faq, Product, Site } from "@/lib/types";
 
 export type AdminFormState = { status: "idle" | "error"; message?: string };
 
@@ -37,76 +48,14 @@ function revalidateContent() {
   revalidatePath("/insights/[slug]");
   revalidatePath("/faq");
   revalidatePath("/quality");
-  revalidatePath("/llms.txt");
 }
 
 function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : "Save failed.";
 }
 
-/* ---------------------------------------------------------------- sign out */
-
-export async function adminSignOut() {
-  const supabase = await createServerSupabaseClient();
-  await supabase?.auth.signOut();
-  redirect("/admin/login");
-}
-
-/* ---------------------------------------------------------------- products */
-
-export async function saveProduct(
-  _prev: AdminFormState,
-  formData: FormData,
-): Promise<AdminFormState> {
-  const supabase = await createServerSupabaseClient();
-  if (!supabase) return { status: "error", message: "Supabase is not configured (check .env)." };
-  try {
-    const id = text(formData.get("id")) || undefined;
-    const row = {
-      slug: text(formData.get("slug")),
-      name: text(formData.get("name")),
-      code: text(formData.get("code")),
-      category_slug: text(formData.get("categorySlug")),
-      summary: text(formData.get("summary")),
-      description: parseJson(formData.get("description"), []),
-      composition: text(formData.get("composition")),
-      weight_gsm: number(formData.get("weightGsm")),
-      width_cm: number(formData.get("widthCm")),
-      weave: text(formData.get("weave")),
-      finish: text(formData.get("finish")),
-      shrinkage: text(formData.get("shrinkage")),
-      moq_meters: number(formData.get("moqMeters")),
-      stock_meters: number(formData.get("stockMeters")),
-      lead_time_min: number(formData.get("leadTimeMin")),
-      lead_time_max: number(formData.get("leadTimeMax")),
-      price_from: number(formData.get("priceFrom")),
-      price_to: number(formData.get("priceTo")),
-      colors: number(formData.get("colors")),
-      certifications: parseJson(formData.get("certifications"), []),
-      applications: parseJson(formData.get("applications"), []),
-      features: parseJson(formData.get("features"), []),
-      image: text(formData.get("image")),
-      image_alt: text(formData.get("imageAlt")),
-      featured: formData.get("featured") === "on",
-      faqs: parseJson(formData.get("faqs"), []),
-      updated_at: new Date().toISOString(),
-    };
-    const { error } = id
-      ? await supabase.from("products").update(row).eq("id", id)
-      : await supabase.from("products").insert(row);
-    if (error) return { status: "error", message: error.message };
-  } catch (error) {
-    return { status: "error", message: messageOf(error) };
-  }
-  revalidateContent();
-  redirect("/admin/products");
-}
-
-export async function deleteProduct(id: string) {
-  const supabase = await createServerSupabaseClient();
-  await supabase?.from("products").delete().eq("id", id);
-  revalidateContent();
-  redirect("/admin/products");
+function uid() {
+  return Math.random().toString(36).slice(2, 10);
 }
 
 /* ---------------------------------------------------------------- categories */
@@ -115,28 +64,33 @@ export async function saveCategory(
   _prev: AdminFormState,
   formData: FormData,
 ): Promise<AdminFormState> {
-  const supabase = await createServerSupabaseClient();
-  if (!supabase) return { status: "error", message: "Supabase is not configured (check .env)." };
   try {
-    const id = text(formData.get("id")) || undefined;
-    const row = {
+    const id = text(formData.get("id"));
+    const categories: (Category & { _id?: string })[] =
+      (getStoreCategory<any[]>() ?? []);
+
+    const updated: Category = {
       slug: text(formData.get("slug")),
       name: text(formData.get("name")),
-      nav_name: text(formData.get("navName")),
+      navName: text(formData.get("navName")),
       tagline: text(formData.get("tagline")),
       summary: text(formData.get("summary")),
-      intro: parseJson(formData.get("intro"), []),
+      intro: parseJson(formData.get("intro"), []) as Category["intro"],
       image: text(formData.get("image")),
-      image_alt: text(formData.get("imageAlt")),
-      highlights: parseJson(formData.get("highlights"), []),
-      applications: parseJson(formData.get("applications"), []),
-      faqs: parseJson(formData.get("faqs"), []),
-      updated_at: new Date().toISOString(),
+      imageAlt: text(formData.get("imageAlt")),
+      highlights: parseJson(formData.get("highlights"), []) as Category["highlights"],
+      applications: parseJson(formData.get("applications"), []) as Category["applications"],
+      faqs: parseJson(formData.get("faqs"), []) as Category["faqs"],
     };
-    const { error } = id
-      ? await supabase.from("categories").update(row).eq("id", id)
-      : await supabase.from("categories").insert(row);
-    if (error) return { status: "error", message: error.message };
+
+    if (id) {
+      const idx = categories.findIndex((c) => c._id === id);
+      if (idx >= 0) categories[idx] = { ...categories[idx], ...updated };
+    } else {
+      categories.push({ ...updated, _id: uid() });
+    }
+
+    setStoreCategories(categories);
   } catch (error) {
     return { status: "error", message: messageOf(error) };
   }
@@ -145,10 +99,71 @@ export async function saveCategory(
 }
 
 export async function deleteCategory(id: string) {
-  const supabase = await createServerSupabaseClient();
-  await supabase?.from("categories").delete().eq("id", id);
+  const categories: any[] = getStoreCategory<any[]>() ?? [];
+  setStoreCategories(categories.filter((c) => c._id !== id));
   revalidateContent();
   redirect("/admin/categories");
+}
+
+/* ---------------------------------------------------------------- products */
+
+export async function saveProduct(
+  _prev: AdminFormState,
+  formData: FormData,
+): Promise<AdminFormState> {
+  try {
+    const id = text(formData.get("id"));
+    const products: (Product & { _id?: string })[] =
+      (getStoreProducts<any[]>() ?? []);
+
+    const updated: Product = {
+      slug: text(formData.get("slug")),
+      name: text(formData.get("name")),
+      code: text(formData.get("code")),
+      categorySlug: text(formData.get("categorySlug")),
+      summary: text(formData.get("summary")),
+      description: parseJson(formData.get("description"), []) as Product["description"],
+      composition: text(formData.get("composition")),
+      weightGsm: number(formData.get("weightGsm")),
+      widthCm: number(formData.get("widthCm")),
+      weave: text(formData.get("weave")),
+      finish: text(formData.get("finish")),
+      shrinkage: text(formData.get("shrinkage")),
+      moqMeters: number(formData.get("moqMeters")),
+      stockMeters: number(formData.get("stockMeters")),
+      leadTimeDays: [number(formData.get("leadTimeMin")), number(formData.get("leadTimeMax"))],
+      priceFrom: number(formData.get("priceFrom")),
+      priceTo: number(formData.get("priceTo")),
+      colors: number(formData.get("colors")),
+      certifications: parseJson(formData.get("certifications"), []) as Product["certifications"],
+      applications: parseJson(formData.get("applications"), []) as Product["applications"],
+      features: parseJson(formData.get("features"), []) as Product["features"],
+      image: text(formData.get("image")),
+      imageAlt: text(formData.get("imageAlt")),
+      featured: formData.get("featured") === "on",
+      faqs: parseJson(formData.get("faqs"), []) as Product["faqs"],
+    };
+
+    if (id) {
+      const idx = products.findIndex((p) => p._id === id);
+      if (idx >= 0) products[idx] = { ...products[idx], ...updated };
+    } else {
+      products.push({ ...updated, _id: uid() });
+    }
+
+    setStoreProducts(products);
+  } catch (error) {
+    return { status: "error", message: messageOf(error) };
+  }
+  revalidateContent();
+  redirect("/admin/products");
+}
+
+export async function deleteProduct(id: string) {
+  const products: any[] = getStoreProducts<any[]>() ?? [];
+  setStoreProducts(products.filter((p) => p._id !== id));
+  revalidateContent();
+  redirect("/admin/products");
 }
 
 /* ---------------------------------------------------------------- articles */
@@ -157,32 +172,37 @@ export async function saveArticle(
   _prev: AdminFormState,
   formData: FormData,
 ): Promise<AdminFormState> {
-  const supabase = await createServerSupabaseClient();
-  if (!supabase) return { status: "error", message: "Supabase is not configured (check .env)." };
   try {
-    const id = text(formData.get("id")) || undefined;
-    const row = {
+    const id = text(formData.get("id"));
+    const articles: (Article & { _id?: string })[] =
+      (getStoreArticles<any[]>() ?? []);
+
+    const updated: Article = {
       slug: text(formData.get("slug")),
       title: text(formData.get("title")),
       description: text(formData.get("description")),
       excerpt: text(formData.get("excerpt")),
       date: text(formData.get("date")),
-      updated: text(formData.get("updated")) || text(formData.get("date")),
+      updated: text(formData.get("updated")) || undefined,
       author: text(formData.get("author")),
-      reading_minutes: number(formData.get("readingMinutes")),
+      readingMinutes: number(formData.get("readingMinutes")),
       topic: text(formData.get("topic")),
       image: text(formData.get("image")),
-      image_alt: text(formData.get("imageAlt")),
-      key_takeaways: parseJson(formData.get("keyTakeaways"), []),
-      sections: parseJson(formData.get("sections"), []),
-      faqs: parseJson(formData.get("faqs"), []),
-      related_categories: parseJson(formData.get("relatedCategories"), []),
-      updated_at: new Date().toISOString(),
+      imageAlt: text(formData.get("imageAlt")),
+      keyTakeaways: parseJson(formData.get("keyTakeaways"), []) as Article["keyTakeaways"],
+      sections: parseJson(formData.get("sections"), []) as Article["sections"],
+      faqs: parseJson(formData.get("faqs"), []) as Article["faqs"],
+      relatedCategories: parseJson(formData.get("relatedCategories"), []) as Article["relatedCategories"],
     };
-    const { error } = id
-      ? await supabase.from("articles").update(row).eq("id", id)
-      : await supabase.from("articles").insert(row);
-    if (error) return { status: "error", message: error.message };
+
+    if (id) {
+      const idx = articles.findIndex((a) => a._id === id);
+      if (idx >= 0) articles[idx] = { ...articles[idx], ...updated };
+    } else {
+      articles.push({ ...updated, _id: uid() });
+    }
+
+    setStoreArticles(articles);
   } catch (error) {
     return { status: "error", message: messageOf(error) };
   }
@@ -191,8 +211,8 @@ export async function saveArticle(
 }
 
 export async function deleteArticle(id: string) {
-  const supabase = await createServerSupabaseClient();
-  await supabase?.from("articles").delete().eq("id", id);
+  const articles: any[] = getStoreArticles<any[]>() ?? [];
+  setStoreArticles(articles.filter((a) => a._id !== id));
   revalidateContent();
   redirect("/admin/articles");
 }
@@ -203,33 +223,36 @@ export async function saveFaq(
   _prev: AdminFormState,
   formData: FormData,
 ): Promise<AdminFormState> {
-  const supabase = await createServerSupabaseClient();
-  if (!supabase) return { status: "error", message: "Supabase is not configured (check .env)." };
   try {
-    const id = text(formData.get("id")) || undefined;
-    const row = {
+    const id = text(formData.get("id"));
+    const faqs: (Faq & { _id?: string; sortOrder?: number })[] =
+      (getStoreFaqs<any[]>() ?? []);
+
+    const updated: Faq = {
       question: text(formData.get("question")),
       answer: text(formData.get("answer")),
-      sort_order: number(formData.get("sortOrder")),
-      updated_at: new Date().toISOString(),
     };
-    const { error } = id
-      ? await supabase.from("faqs").update(row).eq("id", id)
-      : await supabase.from("faqs").insert(row);
-    if (error) return { status: "error", message: error.message };
+
+    if (id) {
+      const idx = faqs.findIndex((f) => f._id === id);
+      if (idx >= 0) faqs[idx] = { ...faqs[idx], ...updated };
+    } else {
+      faqs.push({ ...updated, _id: uid(), sortOrder: faqs.length });
+    }
+
+    setStoreFaqs(faqs);
   } catch (error) {
     return { status: "error", message: messageOf(error) };
   }
   revalidatePath("/");
   revalidatePath("/faq");
   revalidatePath("/quality");
-  revalidatePath("/fabrics");
   redirect("/admin/faqs");
 }
 
 export async function deleteFaq(id: string) {
-  const supabase = await createServerSupabaseClient();
-  await supabase?.from("faqs").delete().eq("id", id);
+  const faqs: any[] = getStoreFaqs<any[]>() ?? [];
+  setStoreFaqs(faqs.filter((f) => f._id !== id));
   revalidatePath("/");
   revalidatePath("/faq");
   redirect("/admin/faqs");
@@ -241,8 +264,6 @@ export async function saveSiteSettings(
   _prev: AdminFormState,
   formData: FormData,
 ): Promise<AdminFormState> {
-  const supabase = await createServerSupabaseClient();
-  if (!supabase) return { status: "error", message: "Supabase is not configured (check .env)." };
   try {
     const site: Site = {
       ...defaultSite,
@@ -278,13 +299,28 @@ export async function saveSiteSettings(
       ) as Site["certifications"],
       stats: parseJson(formData.get("stats"), defaultSite.stats) as Site["stats"],
     };
-    const { error } = await supabase
-      .from("site_settings")
-      .upsert({ key: "site", value: site, updated_at: new Date().toISOString() });
-    if (error) return { status: "error", message: error.message };
+
+    setStoreSite(site);
   } catch (error) {
     return { status: "error", message: messageOf(error) };
   }
   revalidateContent();
   redirect("/admin/settings");
+}
+
+/* ---------------------------------------------------------------- auth */
+
+export async function adminLogin(_prev: { ok: boolean; message?: string }, formData: FormData) {
+  const password = text(formData.get("password"));
+  const expected = process.env.ADMIN_PASSWORD ?? "admin12345";
+
+  if (password !== expected) {
+    return { ok: false as const, message: "Incorrect password" };
+  }
+  // Set cookie via redirect header — we'll handle this in login page
+  return { ok: true as const };
+}
+
+export async function adminSignOut() {
+  redirect("/admin/login?logout=1");
 }

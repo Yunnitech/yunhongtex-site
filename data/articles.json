@@ -1,0 +1,478 @@
+[
+  {
+    "slug": "fabric-gsm-guide",
+    "title": "Fabric GSM explained: how weight changes drape, durability and cost",
+    "description": "A practical guide to fabric GSM for apparel buyers: what the number measures, which weights suit shirts, tees, denim and outerwear, and how weight drives price per metre.",
+    "excerpt": "GSM is the first number most buyers quote and the one most often misunderstood. Here is how weight actually changes drape, opacity, durability and cost — with the bands we use in our own mill.",
+    "date": "2026-09-18",
+    "author": "Yunhong Technical Team",
+    "readingMinutes": 7,
+    "topic": "Fabric fundamentals",
+    "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=overhead%20flat%20lay%20of%20folded%20fabric%20swatches%20in%20graduated%20neutral%20tones%20beside%20a%20measuring%20tape%20on%20a%20pale%20workbench%2C%20soft%20daylight%2C%20editorial%20textile%20photography%2C%20no%20text&image_size=landscape_16_9",
+    "imageAlt": "Folded fabric swatches in graduated weights beside a measuring tape",
+    "keyTakeaways": [
+      "GSM measures grams per square metre — a weight, not a quality grade.",
+      "Two fabrics at the same GSM can behave completely differently because of yarn count, weave and finish.",
+      "Heavier is not automatically better: overspecifying weight raises cost and can make a garment unwearable in hot markets.",
+      "Always confirm GSM on the finished, dyed and washed fabric, not on greige."
+    ],
+    "sections": [
+      {
+        "heading": "What GSM actually measures",
+        "paragraphs": [
+          "GSM stands for grams per square metre. A 160 gsm jersey means one square metre of the finished cloth weighs 160 grams. It is a mass measurement, and nothing more — it says nothing on its own about yarn quality, weave density or durability.",
+          "This matters because buyers often treat GSM as a proxy for quality. Two 180 gsm cotton shirtings can differ by 40% in cost and behave nothing alike: one may use fine 80s combed yarn in a dense plain weave, the other coarser 20s yarn in a loose construction. The first feels crisp and holds a collar; the second feels soft and drapes but pills."
+        ]
+      },
+      {
+        "heading": "Weight bands by garment type",
+        "paragraphs": [
+          "These are the ranges we ship most often. They are starting points, not rules — a heavyweight tee trend can push jersey to 240 gsm, and a summer shirt can drop to 90 gsm."
+        ],
+        "table": {
+          "caption": "Typical fabric weights by garment",
+          "head": [
+            "Garment",
+            "Fabric",
+            "Typical gsm",
+            "Notes"
+          ],
+          "rows": [
+            [
+              "Summer shirt",
+              "Cotton poplin / voile",
+              "90–130",
+              "Below 100 gsm needs a lining or print to stay opaque"
+            ],
+            [
+              "Dress shirt",
+              "Combed poplin",
+              "110–140",
+              "120 is the commercial sweet spot"
+            ],
+            [
+              "T-shirt",
+              "Single jersey",
+              "150–180",
+              "220–240 for heavyweight boxy fits"
+            ],
+            [
+              "Hoodie",
+              "French terry / fleece",
+              "280–340",
+              "320+ for winter-weight brushed back"
+            ],
+            [
+              "Chinos",
+              "Cotton twill",
+              "220–280",
+              "Higher weight for workwear"
+            ],
+            [
+              "Jeans",
+              "Denim",
+              "340–475",
+              "10 oz ≈ 339 gsm, 14 oz ≈ 475 gsm"
+            ],
+            [
+              "Light jacket",
+              "Softshell / taslan",
+              "120–320",
+              "Membrane layers add weight without bulk"
+            ],
+            [
+              "Linen dress",
+              "Washed linen",
+              "160–200",
+              "260 for structured silhouettes"
+            ]
+          ]
+        }
+      },
+      {
+        "heading": "Why two fabrics at the same GSM feel different",
+        "paragraphs": [
+          "Yarn count sets the surface character. Finer yarns at the same weight mean more ends and picks per inch, so the cloth is denser, smoother and more expensive. Coarser yarns give texture, airiness and a lower price.",
+          "Finish changes the hand as much as the construction. A compacted knit at 160 gsm feels denser than an uncompacted one because the loops are closer together. A garment-washed linen at 180 gsm feels lighter than a rigid 180 gsm linen because washing relaxes the weave.",
+          "For this reason, always specify weight on the finished fabric and ask for a finished-sample test report, not a greige figure. Greige-to-finished weight can shift 5–12% after desizing, dyeing and washing."
+        ]
+      },
+      {
+        "heading": "How weight drives cost per metre",
+        "paragraphs": [
+          "Within one construction, price tracks weight almost linearly because you are buying fibre mass. Moving a cotton jersey from 160 to 200 gsm adds roughly 25% to the yarn cost, and yarn is typically 55–65% of the FOB price.",
+          "Across constructions the relationship weakens. Linen at 180 gsm costs more than cotton canvas at 320 gsm, because fibre price and processing differ far more than the weight difference. Never compare quotes across fibre types on price per gram."
+        ],
+        "bullets": [
+          "Same construction: price roughly proportional to GSM.",
+          "Different fibres: fibre price dominates, not weight.",
+          "Finishes (DWR, calendering, bonding) can add 10–30% independent of weight.",
+          "Below 100 gsm, processing cost per metre rises because the fabric is harder to run."
+        ]
+      },
+      {
+        "heading": "Matching weight to market and climate",
+        "paragraphs": [
+          "For Northern European and North American autumn/winter ranges, buyers usually go 10–15% heavier than for Southern Europe. For the Gulf and wider Middle East, weight matters less than fibre and breathability: a 180 gsm linen is cooler than a 150 gsm polyester because of how the fibre handles moisture.",
+          "If you are developing one style for multiple markets, keep the construction and change the finish. A 160 gsm jersey with a dry hand for the Gulf and a peached finish for Northern Europe lets you run one fabric base and two SKUs, which keeps minimums achievable."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Is higher GSM always better quality?",
+        "answer": "No. GSM measures weight per square metre, not quality. Yarn count, weave density, fibre length and finishing determine quality; a well-made 140 gsm poplin outperforms a loose 180 gsm one."
+      },
+      {
+        "question": "How do I convert ounces to GSM for denim?",
+        "answer": "Multiply ounces per square yard by 33.91. So 10 oz denim is about 339 gsm, 12.5 oz is about 424 gsm, and 14 oz is about 475 gsm."
+      },
+      {
+        "question": "Should GSM be measured before or after washing?",
+        "answer": "Specify it on the finished, dyed fabric after the final wash. Greige weight is typically 5–12% higher, so quoting greige GSM will make the delivered cloth feel lighter than expected."
+      }
+    ],
+    "relatedCategories": [
+      "cotton",
+      "knit",
+      "denim"
+    ]
+  },
+  {
+    "slug": "textile-certifications-eu-us",
+    "title": "OEKO-TEX, GRS and GOTS: what EU and US buyers should request",
+    "description": "Which textile certificates matter for EU and US apparel brands, what each one actually covers, and the documents to request with every purchase order to avoid compliance gaps.",
+    "excerpt": "Certificates are easy to display and hard to verify. This is what OEKO-TEX, GRS and GOTS each prove, what they do not prove, and the exact documents to ask for before you sign a PO.",
+    "date": "2026-10-02",
+    "author": "Yunhong Compliance Team",
+    "readingMinutes": 8,
+    "topic": "Compliance",
+    "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=close-up%20of%20a%20fabric%20sample%20book%20open%20on%20a%20desk%20with%20certification%20paperwork%20and%20a%20magnifier%2C%20neutral%20tones%2C%20soft%20daylight%2C%20editorial%20photography%2C%20no%20text&image_size=landscape_16_9",
+    "imageAlt": "Fabric sample book with certification paperwork on a desk",
+    "keyTakeaways": [
+      "OEKO-TEX Standard 100 certifies the finished article is free from harmful substances — it is not a social or environmental audit.",
+      "GRS certifies recycled content and chain of custody, and requires a transaction certificate per shipment.",
+      "GOTS covers organic fibre, processing chemistry and social criteria across the whole supply chain.",
+      "A certificate number on a website proves nothing; the transaction certificate tied to your lot is the document that matters."
+    ],
+    "sections": [
+      {
+        "heading": "Why certificates decide who you can sell to",
+        "paragraphs": [
+          "For EU and US brands, certificates are no longer marketing decoration. Retailers ask for them during onboarding, and sustainability claims face increasing scrutiny under EU green-claims rules and US state-level advertising law. A supplier who cannot produce a lot-level document puts your claim at risk.",
+          "The practical consequence is simple: ask for the certificate that matches the claim you intend to make, and ask for the version tied to your specific shipment."
+        ]
+      },
+      {
+        "heading": "OEKO-TEX Standard 100: what it covers",
+        "paragraphs": [
+          "STANDARD 100 tests every component of the finished article — fabric, thread, trims, prints — for harmful substances: formaldehyde, azo dyes, heavy metals, chlorinated phenols, PFAS and more. It is organised into product classes, with Class I the strictest for baby articles and Class II for articles worn next to the skin.",
+          "What it does not cover: working conditions, environmental management or recycled content. Those are separate schemes (BSCI or SA8000 for social, ISO 14001 for environment, GRS for recycled content)."
+        ],
+        "bullets": [
+          "Ask for: the certificate PDF with a valid expiry date.",
+          "Also ask for: the test report showing your fabric and shade were in scope.",
+          "Check: the certificate holder name matches your supplier, not a trading intermediary."
+        ]
+      },
+      {
+        "heading": "GRS: recycled content with a paper trail",
+        "paragraphs": [
+          "The Global Recycled Standard verifies recycled content, chain of custody from recycler to finished fabric, chemical restrictions and social/environmental criteria. The critical document is the GRS transaction certificate (TC), issued per shipment, naming the product, the quantity in metres and the certified input.",
+          "A supplier can hold a valid GRS scope certificate and still ship non-certified fabric. Without a TC, your recycled claim is unsupported. This is the single most common gap we see when brands audit their supply chain."
+        ]
+      },
+      {
+        "heading": "GOTS: organic fibre plus processing",
+        "paragraphs": [
+          "GOTS requires a minimum 70% certified organic fibre (95% for the 'organic' label grade) and sets rules for processing chemistry, wastewater and social criteria. It covers the whole chain, so both the fabric mill and the garment factory need scope certificates.",
+          "Expect a price premium of 15–25% over conventional cotton and 10–14 extra days of lead time for TC issuance and traceability checks."
+        ]
+      },
+      {
+        "heading": "The document checklist for your next PO",
+        "paragraphs": [
+          "Put these in the purchase order, not in an email thread. Suppliers prioritise what is contractually required."
+        ],
+        "bullets": [
+          "Scope certificate valid for the production dates, in the mill's own name.",
+          "Transaction certificate naming your PO quantity, issued after shipment.",
+          "Latest test report covering the specific shade and finish you ordered.",
+          "Restricted substances list (RSL) confirmation, signed, aligned to your brand's RSL.",
+          "Shrinkage, colourfastness and dimensional test results for the production lot."
+        ]
+      },
+      {
+        "heading": "Red flags when reviewing a supplier's certificates",
+        "paragraphs": [
+          "The certificate is in a trading company's name while the mill is unlisted. The expiry date falls before your production window. The certificate covers a fabric construction you are not buying. The supplier offers recycled content without a transaction certificate. Any of these means the document will not survive a brand audit."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Does OEKO-TEX certify that a fabric is organic?",
+        "answer": "No. OEKO-TEX Standard 100 tests for harmful substances in the finished article. Organic fibre content is certified by GOTS, OCS or equivalent schemes."
+      },
+      {
+        "question": "What is a GRS transaction certificate?",
+        "answer": "A shipment-level document issued under GRS 4.0 that links a specific quantity of certified recycled fabric to the certified yarn input. It is the evidence behind a recycled content claim."
+      },
+      {
+        "question": "How long are textile certificates valid?",
+        "answer": "OEKO-TEX Standard 100 certificates are typically valid for one year and must be renewed. GRS and GOTS scope certificates are also annual, and transaction certificates are issued per shipment."
+      }
+    ],
+    "relatedCategories": [
+      "performance",
+      "cotton",
+      "linen"
+    ]
+  },
+  {
+    "slug": "fabric-moq-lead-times-china",
+    "title": "Fabric MOQ and lead times from Chinese mills: a planning guide",
+    "description": "Why fabric minimums exist, typical MOQ and lead times by fabric type, and how to plan sampling, lab dips, bulk production and ocean freight without missing a launch date.",
+    "excerpt": "MOQ is not arbitrary and lead time is not one number. Here is how a fabric order actually moves through a mill, where the days disappear, and how to negotiate both without damaging the relationship.",
+    "date": "2026-10-21",
+    "author": "Yunhong Sales Team",
+    "readingMinutes": 6,
+    "topic": "Sourcing operations",
+    "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=rows%20of%20fabric%20rolls%20in%20a%20bright%20warehouse%20with%20a%20clipboard%20and%20shipping%20labels%2C%20industrial%20but%20clean%2C%20soft%20daylight%2C%20documentary%20photography%2C%20no%20text&image_size=landscape_16_9",
+    "imageAlt": "Fabric rolls in a warehouse with shipping labels ready for export",
+    "keyTakeaways": [
+      "MOQ is driven by dye-bath size, loom setup and finishing run length — not by sales preference.",
+      "Custom shades add 5–10 days for lab dip approval; stock shades can ship in a week.",
+      "Plan 18–28 days production plus 28–35 days ocean freight for EU and US destinations.",
+      "Offering to combine colours on one dye batch is the most effective way to lower MOQ."
+    ],
+    "sections": [
+      {
+        "heading": "Why minimum order quantities exist",
+        "paragraphs": [
+          "A dyeing machine has a minimum bath volume. Running 200 kg of fabric in a 500 kg machine wastes water, chemicals and heat, and the shade is harder to control. Loom setup has a similar fixed cost: warp preparation and drawing-in take hours regardless of how many metres follow.",
+          "That is why MOQ is quoted per colour, not per order. Ten colours at 300 m each is a very different proposition from one colour at 3,000 m, even though the total is the same."
+        ]
+      },
+      {
+        "heading": "Typical MOQ by fabric type",
+        "paragraphs": [
+          "The figures below are what a mid-size mill can realistically run. Stock programmes are the exception — they exist precisely so smaller brands can buy 100–200 m."
+        ],
+        "table": {
+          "caption": "Indicative minimums and lead times",
+          "head": [
+            "Fabric type",
+            "Custom MOQ",
+            "Stock MOQ",
+            "Production days"
+          ],
+          "rows": [
+            [
+              "Cotton poplin / twill",
+              "300 m / colour",
+              "100 m",
+              "18–30"
+            ],
+            [
+              "Linen (washed)",
+              "300 m / colour",
+              "100 m",
+              "20–30"
+            ],
+            [
+              "Denim",
+              "500 m / colour",
+              "300 m",
+              "25–35"
+            ],
+            [
+              "Circular knit (jersey, rib, terry)",
+              "300 m / colour",
+              "150 m",
+              "15–28"
+            ],
+            [
+              "Viscose / challis",
+              "300 m / colour",
+              "200 m",
+              "18–28"
+            ],
+            [
+              "Bonded softshell",
+              "500 m / colour",
+              "100 m",
+              "28–38"
+            ]
+          ]
+        }
+      },
+      {
+        "heading": "Where the lead time actually goes",
+        "paragraphs": [
+          "A quoted '25 days' usually means production only. The real calendar from enquiry to warehouse is longer, and most delays come from approvals rather than the mill."
+        ],
+        "bullets": [
+          "Lab dip preparation and courier: 7–10 days, of which 3–5 are your approval time.",
+          "Bulk production after approval: 18–28 days depending on fabric.",
+          "Inspection and packing: 2–3 days (we do a 4-point AQL check before packing).",
+          "Ocean freight to Rotterdam or Hamburg: 30–35 days; to Los Angeles: 28–32 days.",
+          "Air freight when a launch slips: 5–7 days door to door at 3–5× the cost."
+        ]
+      },
+      {
+        "heading": "How to lower MOQ without paying a premium",
+        "paragraphs": [
+          "The most effective lever is batch consolidation: offer to run two or three colours in one dye batch, which can cut the per-colour minimum by up to 40%. Second, accept a stock base cloth with a custom finish rather than a custom construction. Third, take a slightly heavier or lighter weight that is already on the loom.",
+          "Ask for the mill's stock shade card early. Choosing a shade within 1–2 ΔE of a stock colour often avoids a custom dye run entirely, and the visual difference on a finished garment is negligible."
+        ]
+      },
+      {
+        "heading": "A realistic planning calendar",
+        "paragraphs": [
+          "For a launch in early March, place the fabric order in mid-November. That allows two weeks for lab dips, four weeks production, five weeks ocean freight, and two weeks buffer for customs or a re-dye. Brands that start in January end up air-freighting, which erodes the margin the fabric saving was meant to protect.",
+          "If you are developing a new construction, add three to four weeks for a sample loom run before the lab dip stage. Developing and bulk ordering in the same month is the most common cause of missed launches we see."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Can I order less than the MOQ for sampling?",
+        "answer": "Yes. Sample lengths of 5–20 metres are available before a bulk commitment, typically at a sample surcharge that is credited against the bulk order."
+      },
+      {
+        "question": "How long does fabric production take after lab dip approval?",
+        "answer": "18–28 days for most woven and knit fabrics, 25–35 days for denim, and 28–38 days for bonded softshell. Add 2–3 days for inspection and packing."
+      },
+      {
+        "question": "Is it cheaper to order from stock?",
+        "answer": "Usually 5–10% cheaper per metre and far faster, because no dye bath or loom setup is needed. The trade-off is limited shade choice and no custom weight or finish."
+      }
+    ],
+    "relatedCategories": [
+      "cotton",
+      "denim",
+      "viscose"
+    ]
+  },
+  {
+    "slug": "linen-viscose-middle-east-climate",
+    "title": "Sourcing linen and viscose for Middle East heat",
+    "description": "How to choose fabric for Gulf and Middle East markets: breathability, coverage, creasing and care, with the weights and blends that work for abaya, kaftan and resort ranges.",
+    "excerpt": "In 45°C with high humidity, fabric choice is a wearability decision, not a styling one. Here is how linen, viscose and cotton actually behave, and what to specify on the tech pack.",
+    "date": "2026-11-04",
+    "author": "Yunhong Technical Team",
+    "readingMinutes": 6,
+    "topic": "Market guides",
+    "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=flowing%20ivory%20linen%20fabric%20in%20warm%20desert%20light%20against%20a%20sand%20coloured%20wall%2C%20long%20shadows%2C%20minimal%20editorial%20fashion%20photography%2C%20no%20text&image_size=landscape_16_9",
+    "imageAlt": "Flowing ivory linen fabric in warm desert light",
+    "keyTakeaways": [
+      "Moisture absorbency and airflow matter more than GSM in hot, humid climates.",
+      "Linen is the coolest option but creases; viscose-linen blends balance drape and crease resistance.",
+      "Polyester blends feel clammy and trap odour — avoid them for next-to-skin summer styles.",
+      "Pre-shrunk finishes and clear care labelling reduce returns in markets with high washing frequencies."
+    ],
+    "sections": [
+      {
+        "heading": "Why polyester fails in Gulf summer conditions",
+        "paragraphs": [
+          "Polyester is hydrophobic: it absorbs less than 1% of its weight in moisture, so perspiration sits on the skin instead of moving into the fabric. In 40°C-plus humidity this reads as clammy, and because the fibre traps oils it also holds odour after repeated wear.",
+          "That does not make performance fabrics unusable — they are right for outerwear and uniforms — but for next-to-skin summer styles sold in the UAE, Saudi Arabia or Qatar, cellulosic fibres consistently outperform."
+        ]
+      },
+      {
+        "heading": "Linen, viscose and cotton compared",
+        "paragraphs": [
+          "All three are cellulosic and absorb moisture well, but they differ in stiffness, drape and how they age."
+        ],
+        "table": {
+          "caption": "Cellulosic fibres in hot climates",
+          "head": [
+            "Fibre",
+            "Moisture regain",
+            "Drape",
+            "Creasing",
+            "Best for"
+          ],
+          "rows": [
+            [
+              "Linen",
+              "12–15%",
+              "Structured",
+              "High",
+              "Abaya, kaftan, resort shirts"
+            ],
+            [
+              "Viscose",
+              "11–13%",
+              "Fluid",
+              "Medium",
+              "Dresses, blouses, lining"
+            ],
+            [
+              "Cotton",
+              "7–8%",
+              "Moderate",
+              "Low–medium",
+              "Shirting, jersey, everyday wear"
+            ],
+            [
+              "Viscose-linen 55/45",
+              "11–14%",
+              "Fluid with body",
+              "Medium",
+              "Wide-leg trousers, dresses"
+            ]
+          ]
+        }
+      },
+      {
+        "heading": "Choosing weights for coverage",
+        "paragraphs": [
+          "Modest silhouettes need coverage without heat. For abaya and kaftan, 180–260 gsm washed linen gives opacity and structure while staying breathable. For lighter dresses, 110–150 gsm viscose challis or viscose-linen works if the shade is mid to dark, or if the style is lined.",
+          "Avoid assuming heavier equals more modest. An open-weave 260 gsm linen can transmit more light than a dense 150 gsm viscose. We test light transmission on request for unlined styles."
+        ]
+      },
+      {
+        "heading": "What to specify on the tech pack",
+        "paragraphs": [
+          "Vague specs produce vague fabric. These are the fields that prevent 90% of the disputes we see on hot-climate orders."
+        ],
+        "bullets": [
+          "Fibre composition with tolerance (for example 55% linen / 45% cotton, ±3%).",
+          "Finished weight in gsm after wash, not greige.",
+          "Shrinkage limits and the wash method used to test them.",
+          "Colourfastness to washing, light and perspiration — light fastness matters most here.",
+          "Opacity requirement if the style is unlined.",
+          "Care label wording aligned to your market's language requirements."
+        ]
+      },
+      {
+        "heading": "Care, labelling and returns",
+        "paragraphs": [
+          "Households in the Gulf often wash frequently and at higher temperatures. A fabric that survives 30°C but not 40°C will generate returns. We test to both and report the difference, and we recommend 30°C care labelling for viscose and 40°C for washed linen.",
+          "For Saudi Arabia, SASO conformity and Arabic labelling are required at import; for the UAE, ESMA registration applies to some textile categories. Build two to three weeks into your first shipment for documentation."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Is linen too hot for the Middle East?",
+        "answer": "No — linen is one of the coolest fibres available. It absorbs moisture quickly and dries fast, and its loose weave allows airflow. The trade-off is creasing, which many Gulf brands treat as an accepted characteristic."
+      },
+      {
+        "question": "What is the best fabric for abaya?",
+        "answer": "Washed linen at 180–260 gsm for structured, breathable abaya, or viscose-linen at 150 gsm for a softer drape. Both give coverage with far better breathability than polyester crepe."
+      },
+      {
+        "question": "Do you provide Arabic care labels?",
+        "answer": "We supply care-label content in English and Arabic, and can coordinate with your label supplier. Arabic labelling is mandatory for Saudi imports and recommended for UAE retail."
+      }
+    ],
+    "relatedCategories": [
+      "linen",
+      "viscose",
+      "cotton"
+    ]
+  }
+]
