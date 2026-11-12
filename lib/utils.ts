@@ -1,5 +1,12 @@
+import { createHash } from "crypto";
+
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
+}
+
+/** SHA-256 hex digest — shared by admin auth (server actions & layouts). */
+export function sha256Hex(text: string): string {
+  return createHash("sha256").update(text).digest("hex");
 }
 
 /**
