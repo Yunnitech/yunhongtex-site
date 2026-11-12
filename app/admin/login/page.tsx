@@ -69,8 +69,7 @@ function LoginForm() {
           </button>
         </form>
         <p className="mt-6 text-center text-[0.75rem] text-muted">
-          Default password: <code>admin12345</code> — change it via{" "}
-          <code>ADMIN_PASSWORD</code> in <code>.env</code>
+          Sign-in requires <code>ADMIN_PASSWORD</code> to be configured on the server.
         </p>
         <p className="mt-2 text-center text-[0.75rem]">
           <a href="/" className="link-underline text-muted">← Back to the website</a>
