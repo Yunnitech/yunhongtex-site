@@ -246,15 +246,25 @@ export async function saveFaq(
     const faqs: Faq[] = (await getStoreFaqs<Faq[]>()) ?? [];
 
     const updated: Faq = {
+      id: id || crypto.randomUUID(),
       question: text(formData.get("question")),
       answer: text(formData.get("answer")),
     };
 
-    const idx = id ? Number(id) : -1;
-    if (Number.isInteger(idx) && idx >= 0 && idx < faqs.length) {
-      faqs[idx] = { ...faqs[idx], ...updated };
+    // Locate by stable id; fall back to the legacy numeric index so old
+    // store data without ids can still be edited safely.
+    const sortOrder = number(formData.get("sortOrder"));
+    const byId = id ? faqs.findIndex((f) => f.id === id) : -1;
+    const legacyIndex =
+      byId === -1 && id && /^\d+$/.test(id) && Number(id) < faqs.length ? Number(id) : -1;
+    const idx = byId !== -1 ? byId : legacyIndex;
+
+    if (idx >= 0) {
+      const [item] = faqs.splice(idx, 1);
+      const target = Math.min(Math.max(sortOrder, 0), faqs.length);
+      faqs.splice(target, 0, { ...item, ...updated });
     } else {
-      faqs.push(updated);
+      faqs.splice(Math.min(Math.max(sortOrder, 0), faqs.length), 0, updated);
     }
 
     await setStoreFaqs(faqs);
@@ -269,8 +279,10 @@ export async function saveFaq(
 
 export async function deleteFaq(id: string) {
   const faqs: Faq[] = (await getStoreFaqs<Faq[]>()) ?? [];
-  const idx = Number(id);
-  if (Number.isInteger(idx) && idx >= 0 && idx < faqs.length) faqs.splice(idx, 1);
+  const byId = faqs.findIndex((f) => f.id === id);
+  const legacyIndex = byId === -1 && /^\d+$/.test(id) && Number(id) < faqs.length ? Number(id) : -1;
+  const idx = byId !== -1 ? byId : legacyIndex;
+  if (idx >= 0) faqs.splice(idx, 1);
   await setStoreFaqs(faqs);
   revalidatePath("/");
   revalidatePath("/faq");
