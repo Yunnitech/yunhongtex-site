@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { RfqForm } from "@/components/rfq-form";
+import { WhatsAppLink } from "@/components/whatsapp-link";
 import { breadcrumbSchema, webPageSchema } from "@/lib/schema";
 import { buildMetadata } from "@/lib/seo";
 import { getCategories, getSite } from "@/lib/queries";
@@ -97,14 +98,13 @@ export default async function ContactPage() {
               <div>
                 <dt className="text-[0.625rem] uppercase tracking-[0.14em] text-muted">WhatsApp</dt>
                 <dd className="mt-1">
-                  <a
+                  <WhatsAppLink
                     href={whatsappLink(site.whatsapp)}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    location="contact"
                     className="link-underline text-[1.0625rem]"
                   >
                     {site.whatsapp}
-                  </a>
+                  </WhatsAppLink>
                 </dd>
               </div>
               <div>
