@@ -7,7 +7,7 @@ import { CtaBand } from "@/components/cta-band";
 import { FaqList } from "@/components/faq-list";
 import { JsonLd } from "@/components/json-ld";
 import { getArticles, getArticle, getCategories, getRecentArticles, getSite } from "@/lib/queries";
-import { articleSchema, breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { articleSchema, breadcrumbSchema, faqSchema, webPageSchema } from "@/lib/schema";
 import { buildMetadata } from "@/lib/seo";
 import { formatDate } from "@/lib/utils";
 
@@ -69,7 +69,19 @@ export default async function ArticlePage({ params }: Params) {
   return (
     <>
       <JsonLd
-        data={[articleSchema(article, site), breadcrumbSchema(breadcrumbItems), faqSchema(article.faqs)]}
+        data={[
+          articleSchema(article, site),
+          breadcrumbSchema(breadcrumbItems),
+          faqSchema(article.faqs),
+          webPageSchema(
+            {
+              title: article.title,
+              description: article.description,
+              path: `/insights/${article.slug}`,
+            },
+            site,
+          ),
+        ]}
       />
 
       <div className="border-b border-line">
