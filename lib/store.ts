@@ -102,19 +102,3 @@ export async function setStoreFaqs<T>(data: T): Promise<void> {
 export async function setStoreSite<T>(data: T): Promise<void> {
   return writeCollection("site", data);
 }
-
-/**
- * Seeds Redis (or data/*.json) from the bundled static catalogue when the
- * store is empty. Safe to run repeatedly.
- */
-export async function ensureSeeded(seed: Record<string, unknown>): Promise<string[]> {
-  const written: string[] = [];
-  for (const [name, value] of Object.entries(seed)) {
-    const existing = await readCollection(name);
-    if (existing === null) {
-      await writeCollection(name, value);
-      written.push(name);
-    }
-  }
-  return written;
-}
