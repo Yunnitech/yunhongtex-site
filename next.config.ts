@@ -9,14 +9,7 @@ const nextConfig: NextConfig = {
     "/**/*": ["./data/**/*"],
   },
   images: {
-    // Fabric photography is served from the asset generation host.
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "trae-api-cn.mchost.guru",
-        pathname: "/api/ide/v1/text_to_image",
-      },
-    ],
+    // All imagery is self-hosted in public/images/ — no remote hosts needed.
     formats: ["image/avif", "image/webp"],
   },
   async headers() {
