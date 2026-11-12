@@ -84,7 +84,7 @@ function mapArticle(r: any): Article {
 }
 
 function mapFaq(r: any): Faq {
-  return { question: r.question, answer: r.answer };
+  return { id: r.id, question: r.question, answer: r.answer };
 }
 
 /* ------------------------------------------------------------------ data source priority:
