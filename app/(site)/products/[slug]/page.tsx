@@ -10,7 +10,7 @@ import { ProductCard } from "@/components/product-card";
 import { SectionHeading } from "@/components/section-heading";
 import { productPriceRange } from "@/lib/products";
 import { getCategory, getProduct, getProducts, getRelatedProducts, getSite } from "@/lib/queries";
-import { breadcrumbSchema, faqSchema, productSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema, productSchema, webPageSchema } from "@/lib/schema";
 import { buildMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -89,6 +89,14 @@ export default async function ProductPage({ params }: Params) {
           productSchema(product, site, category),
           breadcrumbSchema(breadcrumbItems),
           faqSchema(product.faqs),
+          webPageSchema(
+            {
+              title: product.name,
+              description: product.summary,
+              path: `/products/${product.slug}`,
+            },
+            site,
+          ),
         ]}
       />
 
