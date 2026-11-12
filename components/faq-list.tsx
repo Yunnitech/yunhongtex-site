@@ -13,7 +13,7 @@ export function FaqList({
   return (
     <div className={cn("divide-y divide-line border-y border-line", className)}>
       {faqs.map((faq, index) => (
-        <details key={faq.question} open={index < defaultOpen} className="group py-5">
+        <details key={faq.id ?? faq.question} open={index < defaultOpen} className="group py-5">
           <summary className="flex items-start justify-between gap-6">
             <span className="font-sans text-[1.0625rem] font-medium leading-snug text-ink">
               {faq.question}
