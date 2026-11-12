@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { adminSignOut } from "@/app/admin/actions";
+import { sha256Hex } from "@/lib/utils";
 import { Logo } from "@/components/logo";
 
 export const metadata: Metadata = {
@@ -22,8 +23,11 @@ const sections = [
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
-  const expected = process.env.ADMIN_PASSWORD || "admin12345";
-  const authenticated = cookieStore.get("admin_auth")?.value === expected;
+  // Same fail-closed hash check as middleware — no fallback password.
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  const expectedHash = adminPassword ? sha256Hex(adminPassword) : null;
+  const authenticated =
+    expectedHash !== null && cookieStore.get("admin_auth")?.value === expectedHash;
 
   // Login page — no sidebar chrome.
   if (!authenticated) return <>{children}</>;
