@@ -1,7 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { submitRfq, type RfqState } from "@/app/actions";
+import { trackEvent } from "@/lib/analytics";
 import type { Category, Site } from "@/lib/types";
 
 const initialState: RfqState = { status: "idle" };
@@ -17,6 +18,12 @@ export function RfqForm({
 }) {
   const [state, formAction, pending] = useActionState(submitRfq, initialState);
 
+  useEffect(() => {
+    if (state.status === "success") {
+      trackEvent("generate_lead", { product: defaultProduct ?? "general" });
+    }
+  }, [state.status, defaultProduct]);
+
   if (state.status === "success") {
     return (
       <div className="card p-8 sm:p-10" role="status" aria-live="polite">
@@ -25,7 +32,11 @@ export function RfqForm({
         <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-soft">{state.message}</p>
         <p className="mt-6 text-sm text-muted">
           Need a faster answer? Message us on WhatsApp at{" "}
-          <a className="link-underline text-ink-soft" href={`https://wa.me/${site.whatsapp.replace(/[^\d]/g, "")}`}>
+          <a
+            className="link-underline text-ink-soft"
+            href={`https://wa.me/${site.whatsapp.replace(/[^\d]/g, "")}`}
+            onClick={() => trackEvent("whatsapp_click", { location: "rfq_success" })}
+          >
             {site.whatsapp}
           </a>
           .
