@@ -1,3 +1,4 @@
+import { cache } from "react";
 import type { Article, Category, Faq, Product, Site } from "@/lib/types";
 import { categories as seedCategories, products as seedProducts } from "@/lib/products";
 import { articles as seedArticles } from "@/lib/articles";
@@ -90,9 +91,15 @@ function mapFaq(r: any): Faq {
 /* ------------------------------------------------------------------ data source priority:
    1. data/*.json files (edited via admin panel)
    2. Supabase (if configured)
-   3. bundled static seeds                                                    */
+   3. bundled static seeds
 
-async function loadCategories(): Promise<Category[]> {
+   Every loader is wrapped in React `cache()` so that within a single render
+   pass (layout + header + footer + page + generateMetadata) the store is
+   read only once per collection — one Redis round-trip or file read instead
+   of five to seven. The cache resets between requests, so admin edits take
+   effect on the next render after `revalidatePath`.                               */
+
+const loadCategories = cache(async (): Promise<Category[]> => {
   const file = await getStoreCategories<any[]>();
   if (file) return file.map(mapCategory);
   const supabase = createAnonSupabaseClient();
@@ -101,9 +108,9 @@ async function loadCategories(): Promise<Category[]> {
     if (!error && data && data.length > 0) return data.map(mapCategory);
   }
   return seedCategories;
-}
+});
 
-async function loadProducts(): Promise<Product[]> {
+const loadProducts = cache(async (): Promise<Product[]> => {
   const file = await getStoreProducts<any[]>();
   if (file) return file.map(mapProduct);
   const supabase = createAnonSupabaseClient();
@@ -112,9 +119,9 @@ async function loadProducts(): Promise<Product[]> {
     if (!error && data && data.length > 0) return data.map(mapProduct);
   }
   return seedProducts;
-}
+});
 
-async function loadArticles(): Promise<Article[]> {
+const loadArticles = cache(async (): Promise<Article[]> => {
   const file = await getStoreArticles<any[]>();
   if (file) return file.map(mapArticle);
   const supabase = createAnonSupabaseClient();
@@ -123,9 +130,9 @@ async function loadArticles(): Promise<Article[]> {
     if (!error && data && data.length > 0) return data.map(mapArticle);
   }
   return seedArticles;
-}
+});
 
-async function loadFaqs(): Promise<Faq[]> {
+const loadFaqs = cache(async (): Promise<Faq[]> => {
   const file = await getStoreFaqs<any[]>();
   if (file) return file.map(mapFaq);
   const supabase = createAnonSupabaseClient();
@@ -134,13 +141,13 @@ async function loadFaqs(): Promise<Faq[]> {
     if (!error && data && data.length > 0) return data.map(mapFaq);
   }
   return seedFaqs;
-}
+});
 
-async function loadSite(): Promise<Site> {
+const loadSite = cache(async (): Promise<Site> => {
   const file = await getStoreSite<Site>();
   if (file) return { ...defaultSite, ...file, address: { ...defaultSite.address, ...(file.address ?? {}) }, social: { ...defaultSite.social, ...(file.social ?? {}) }, terms: { ...defaultSite.terms, ...(file.terms ?? {}) } };
   return defaultSite;
-}
+});
 
 /* ------------------------------------------------------------------ exports */
 
