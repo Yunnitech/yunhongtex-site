@@ -8,7 +8,7 @@
     "author": "Yunhong Technical Team",
     "readingMinutes": 7,
     "topic": "Fabric fundamentals",
-    "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=overhead%20flat%20lay%20of%20folded%20fabric%20swatches%20in%20graduated%20neutral%20tones%20beside%20a%20measuring%20tape%20on%20a%20pale%20workbench%2C%20soft%20daylight%2C%20editorial%20textile%20photography%2C%20no%20text&image_size=landscape_16_9",
+    "image": "/images/6dd7cd03.jpg",
     "imageAlt": "Folded fabric swatches in graduated weights beside a measuring tape",
     "keyTakeaways": [
       "GSM measures grams per square metre — a weight, not a quality grade.",
@@ -147,7 +147,7 @@
     "author": "Yunhong Compliance Team",
     "readingMinutes": 8,
     "topic": "Compliance",
-    "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=close-up%20of%20a%20fabric%20sample%20book%20open%20on%20a%20desk%20with%20certification%20paperwork%20and%20a%20magnifier%2C%20neutral%20tones%2C%20soft%20daylight%2C%20editorial%20photography%2C%20no%20text&image_size=landscape_16_9",
+    "image": "/images/10a056a6.jpg",
     "imageAlt": "Fabric sample book with certification paperwork on a desk",
     "keyTakeaways": [
       "OEKO-TEX Standard 100 certifies the finished article is free from harmful substances — it is not a social or environmental audit.",
@@ -238,7 +238,7 @@
     "author": "Yunhong Sales Team",
     "readingMinutes": 6,
     "topic": "Sourcing operations",
-    "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=rows%20of%20fabric%20rolls%20in%20a%20bright%20warehouse%20with%20a%20clipboard%20and%20shipping%20labels%2C%20industrial%20but%20clean%2C%20soft%20daylight%2C%20documentary%20photography%2C%20no%20text&image_size=landscape_16_9",
+    "image": "/images/d5a35227.jpg",
     "imageAlt": "Fabric rolls in a warehouse with shipping labels ready for export",
     "keyTakeaways": [
       "MOQ is driven by dye-bath size, loom setup and finishing run length — not by sales preference.",
@@ -364,7 +364,7 @@
     "author": "Yunhong Technical Team",
     "readingMinutes": 6,
     "topic": "Market guides",
-    "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=flowing%20ivory%20linen%20fabric%20in%20warm%20desert%20light%20against%20a%20sand%20coloured%20wall%2C%20long%20shadows%2C%20minimal%20editorial%20fashion%20photography%2C%20no%20text&image_size=landscape_16_9",
+    "image": "/images/432ed7ef.jpg",
     "imageAlt": "Flowing ivory linen fabric in warm desert light",
     "keyTakeaways": [
       "Moisture absorbency and airflow matter more than GSM in hot, humid climates.",
