@@ -11,16 +11,19 @@ export default async function EditFaqPage({
   const { id } = await params;
   const faqs = (await getStoreFaqs<Faq[]>()) ?? [];
 
-  const index = Number(id);
-  const faq =
-    Number.isInteger(index) && index >= 0 && index < faqs.length ? faqs[index] : undefined;
+  // Stable id first; legacy numeric index for old store data without ids.
+  const byId = faqs.find((f) => f.id === id);
+  const legacyIndex = /^\d+$/.test(id) && Number(id) < faqs.length ? Number(id) : -1;
+  const faq = byId ?? (legacyIndex >= 0 ? faqs[legacyIndex] : undefined);
   if (!faq) notFound();
 
+  const currentIndex = byId ? faqs.findIndex((f) => f.id === id) : legacyIndex;
+
   const initial: FaqRow = {
-    id: String(index),
+    id: faq.id ?? id,
     question: faq.question,
     answer: faq.answer,
-    sort_order: index,
+    sort_order: currentIndex,
   };
 
   return (
