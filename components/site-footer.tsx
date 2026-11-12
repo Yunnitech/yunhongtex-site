@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
+import { WhatsAppLink } from "@/components/whatsapp-link";
 import { getCategories, getSite } from "@/lib/queries";
 import { whatsappLink } from "@/lib/site";
 
@@ -92,14 +93,13 @@ export async function SiteFooter() {
                   </a>
                 </p>
                 <p>
-                  <a
+                  <WhatsAppLink
                     href={whatsappLink(site.whatsapp)}
+                    location="footer"
                     className="hover:text-paper"
-                    target="_blank"
-                    rel="noopener noreferrer"
                   >
                     WhatsApp {site.whatsapp}
-                  </a>
+                  </WhatsAppLink>
                 </p>
                 <p className="text-paper/50">{site.hours}</p>
               </address>
