@@ -4,8 +4,6 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { adminLogin } from "../actions";
 
-const COOKIE_NAME = "admin_auth";
-
 function LoginForm() {
   const router = useRouter();
   const search = useSearchParams();
@@ -30,8 +28,7 @@ function LoginForm() {
       return;
     }
 
-    // Set auth cookie client-side — matches middleware check
-    document.cookie = `${COOKIE_NAME}=${encodeURIComponent(password)}; path=/; max-age=604800; SameSite=Lax`;
+    // Auth cookie is set httpOnly by the server action — nothing to do here.
     const from = search.get("from") ?? "/admin";
     router.push(from);
     router.refresh();
