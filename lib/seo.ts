@@ -40,7 +40,9 @@ export function buildMetadata({
   noIndex,
 }: MetadataInput): Metadata {
   const url = absoluteUrl(path);
-  const ogImage = image ?? defaultOgImage;
+  // OG/Twitter crawlers require absolute image URLs; local assets are
+  // resolved against the canonical site URL.
+  const ogImage = absoluteUrl(image ?? defaultOgImage);
 
   return {
     title,
