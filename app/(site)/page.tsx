@@ -6,6 +6,7 @@ import { FaqList } from "@/components/faq-list";
 import { JsonLd } from "@/components/json-ld";
 import { ProductCard } from "@/components/product-card";
 import { SectionHeading } from "@/components/section-heading";
+import { WhatsAppLink } from "@/components/whatsapp-link";
 import { getCategories, getFeaturedProducts, getFaqs, getProducts, getRecentArticles, getSite } from "@/lib/queries";
 import { faqSchema, itemListSchema } from "@/lib/schema";
 import { buildMetadata } from "@/lib/seo";
@@ -419,9 +420,9 @@ export default async function HomePage() {
                   Read the full buyer FAQ
                 </Link>{" "}
                 or message us on{" "}
-                <a href={whatsappLink(site.whatsapp)} className="link-underline text-ink">
+                <WhatsAppLink href={whatsappLink(site.whatsapp)} location="home_faq" className="link-underline text-ink">
                   WhatsApp
-                </a>
+                </WhatsAppLink>
                 .
               </p>
             </div>
