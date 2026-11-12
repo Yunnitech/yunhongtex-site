@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { createHash, timingSafeEqual } from "crypto";
+import { timingSafeEqual } from "crypto";
+import { sha256Hex } from "@/lib/utils";
 import {
   getStoreCategories,
   getStoreProducts,
@@ -334,10 +335,6 @@ export async function saveSiteSettings(
 /* ---------------------------------------------------------------- auth */
 
 const ADMIN_COOKIE = "admin_auth";
-
-function sha256Hex(text: string): string {
-  return createHash("sha256").update(text).digest("hex");
-}
 
 function safeEqual(a: string, b: string): boolean {
   const bufA = Buffer.from(a, "utf-8");
