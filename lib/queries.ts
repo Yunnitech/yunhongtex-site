@@ -11,7 +11,6 @@ import {
   getStoreFaqs,
   getStoreSite,
 } from "@/lib/store";
-import { createAnonSupabaseClient } from "@/lib/supabase/anon";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -89,9 +88,8 @@ function mapFaq(r: any): Faq {
 }
 
 /* ------------------------------------------------------------------ data source priority:
-   1. data/*.json files (edited via admin panel)
-   2. Supabase (if configured)
-   3. bundled static seeds
+   1. data/*.json files (edited via admin panel, or Upstash Redis on Vercel)
+   2. bundled static seeds
 
    Every loader is wrapped in React `cache()` so that within a single render
    pass (layout + header + footer + page + generateMetadata) the store is
@@ -102,44 +100,24 @@ function mapFaq(r: any): Faq {
 const loadCategories = cache(async (): Promise<Category[]> => {
   const file = await getStoreCategories<any[]>();
   if (file) return file.map(mapCategory);
-  const supabase = createAnonSupabaseClient();
-  if (supabase) {
-    const { data, error } = await supabase.from("categories").select("*");
-    if (!error && data && data.length > 0) return data.map(mapCategory);
-  }
   return seedCategories;
 });
 
 const loadProducts = cache(async (): Promise<Product[]> => {
   const file = await getStoreProducts<any[]>();
   if (file) return file.map(mapProduct);
-  const supabase = createAnonSupabaseClient();
-  if (supabase) {
-    const { data, error } = await supabase.from("products").select("*");
-    if (!error && data && data.length > 0) return data.map(mapProduct);
-  }
   return seedProducts;
 });
 
 const loadArticles = cache(async (): Promise<Article[]> => {
   const file = await getStoreArticles<any[]>();
   if (file) return file.map(mapArticle);
-  const supabase = createAnonSupabaseClient();
-  if (supabase) {
-    const { data, error } = await supabase.from("articles").select("*");
-    if (!error && data && data.length > 0) return data.map(mapArticle);
-  }
   return seedArticles;
 });
 
 const loadFaqs = cache(async (): Promise<Faq[]> => {
   const file = await getStoreFaqs<any[]>();
   if (file) return file.map(mapFaq);
-  const supabase = createAnonSupabaseClient();
-  if (supabase) {
-    const { data, error } = await supabase.from("faqs").select("*");
-    if (!error && data && data.length > 0) return data.map(mapFaq);
-  }
   return seedFaqs;
 });
 
