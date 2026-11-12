@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { createHash, timingSafeEqual } from "crypto";
 import {
   getStoreCategories,
   getStoreProducts,
@@ -331,17 +333,44 @@ export async function saveSiteSettings(
 
 /* ---------------------------------------------------------------- auth */
 
+const ADMIN_COOKIE = "admin_auth";
+
+function sha256Hex(text: string): string {
+  return createHash("sha256").update(text).digest("hex");
+}
+
+function safeEqual(a: string, b: string): boolean {
+  const bufA = Buffer.from(a, "utf-8");
+  const bufB = Buffer.from(b, "utf-8");
+  return bufA.length === bufB.length && timingSafeEqual(bufA, bufB);
+}
+
 export async function adminLogin(_prev: { ok: boolean; message?: string }, formData: FormData) {
   const password = text(formData.get("password"));
-  const expected = process.env.ADMIN_PASSWORD || "admin12345";
+  const expected = process.env.ADMIN_PASSWORD;
 
-  if (password !== expected) {
+  // Fail closed: no fallback password. Without ADMIN_PASSWORD the admin
+  // area cannot be logged into.
+  if (!expected) {
+    return { ok: false as const, message: "ADMIN_PASSWORD is not configured on the server." };
+  }
+
+  if (!safeEqual(sha256Hex(password), sha256Hex(expected))) {
     return { ok: false as const, message: "Incorrect password" };
   }
-  // Set cookie via redirect header — we'll handle this in login page
+
+  // httpOnly cookie holding only the password hash — never the password.
+  (await cookies()).set(ADMIN_COOKIE, sha256Hex(expected), {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+  });
   return { ok: true as const };
 }
 
 export async function adminSignOut() {
+  (await cookies()).delete(ADMIN_COOKIE);
   redirect("/admin/login?logout=1");
 }
