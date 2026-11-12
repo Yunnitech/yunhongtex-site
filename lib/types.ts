@@ -1,6 +1,6 @@
 /** Shared domain types — single source for both the front-end and the admin CMS. */
 
-export type Faq = { question: string; answer: string };
+export type Faq = { id?: string; question: string; answer: string };
 
 export type Category = {
   slug: string;
